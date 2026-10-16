@@ -1,0 +1,40 @@
+---
+// src/components/HeroHeader.astro
+interface Props {
+  title: string;
+  subtitle?: string;
+  avatar?: string;
+  tokensId: string;
+  gradientFrom?: string;
+  gradientTo?: string;
+}
+
+const {
+  title,
+  subtitle = "Héroe en Casa",
+  avatar = "👦",
+  tokensId,
+  gradientFrom = "from-blue-600",
+  gradientTo = "to-indigo-700"
+} = Astro.props;
+---
+
+<header class={`bg-gradient-to-r ${gradientFrom} ${gradientTo} text-white p-5 rounded-b-[2.5rem] shadow-lg sticky top-0 z-30`}>
+  <div class="max-w-md mx-auto flex justify-between items-center">
+    <div class="flex items-center gap-3">
+      <div class="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl shadow-inner border border-white/30" id="child-header-avatar">
+        {avatar}
+      </div>
+      <div>
+        <span class="text-xs uppercase font-bold text-blue-100 tracking-wider">{subtitle}</span>
+        <h1 class="text-xl font-black" id="child-header-name">{title}</h1>
+      </div>
+    </div>
+
+    <!-- Contador de Fichas Azules -->
+    <div class="bg-white/15 backdrop-blur-md px-3.5 py-2 rounded-2xl border border-white/20 flex items-center gap-1.5 shadow-inner">
+      <span class="text-base">🔵</span>
+      <span id={tokensId} class="font-black text-sm text-white">0</span>
+    </div>
+  </div>
+</header>

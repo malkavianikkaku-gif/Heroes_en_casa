@@ -1,0 +1,146 @@
+---
+// src/pages/nino/logros.astro
+import '../../styles/global.css';
+import HeroHeader from '../../components/HeroHeader.astro';
+---
+
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Galería de Trofeos - Héroes en Casa</title>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen pb-24 font-sans">
+
+  <!-- Header Estilo RPG Modularizado -->
+  <HeroHeader 
+    title="Sala de Trofeos" 
+    subtitle="Insignias del Héroe" 
+    avatar="🏆" 
+    tokensId="trophy-blue-tokens"
+    gradientFrom="from-purple-600"
+    gradientTo="to-indigo-700"
+  />
+
+  <main class="max-w-md mx-auto p-4 space-y-6">
+
+    <!-- Tarjeta de Nivel y Progreso -->
+    <section class="bg-gradient-to-r from-purple-900 to-indigo-900 text-white p-5 rounded-3xl shadow-md border border-purple-700/50 space-y-3">
+      <div class="flex justify-between items-center">
+        <div>
+          <span class="text-[10px] font-bold uppercase tracking-wider text-purple-300">Nivel de Héroe</span>
+          <h2 class="text-xl font-black text-amber-300">Explorador Legendario 🌟</h2>
+        </div>
+        <div class="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center text-2xl border border-white/20">
+          👑
+        </div>
+      </div>
+      <p class="text-xs text-purple-200">
+        ¡Sigue completando misiones para desbloquear nuevos trofeos e insignias especiales!
+      </p>
+    </section>
+
+    <!-- Lista de Trofeos Desbloqueables -->
+    <section class="space-y-3">
+      <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider">🏅 Insignias & Trofeos</h3>
+
+      <div id="trophies-container" class="space-y-3">
+        <!-- Renderizado dinámico mediante JS -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Navegación Inferior (Bottom Bar) -->
+  <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 py-2 px-6 z-40 shadow-lg">
+    <div class="max-w-md mx-auto flex justify-around items-center">
+      <a href="/nino" class="flex flex-col items-center text-slate-400 hover:text-slate-600 font-bold text-xs">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+        </svg>
+        <span>Inicio</span>
+      </a>
+      <a href="/tiendita" class="flex flex-col items-center text-slate-400 hover:text-slate-600 font-bold text-xs">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+        </svg>
+        <span>Tiendita</span>
+      </a>
+      <a href="/nino/logros" class="flex flex-col items-center text-purple-600 font-bold text-xs">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L13 3z" />
+        </svg>
+        <span>Trofeos</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- Lógica Dinámica de Trofeos -->
+  <script>
+    // @ts-nocheck
+    const STORAGE_KEY = 'family_app_state_v1';
+
+    const defaultTrophies = [
+      { id: 't1', emoji: '🌟', title: 'Primer Paso de Héroe', desc: 'Completar tu primera misión en la app', unlocked: true },
+      { id: 't2', emoji: '🦷', title: 'Sonrisa Brillante', desc: 'Completar la misión de lavarte los dientes', unlocked: true },
+      { id: 't3', emoji: '⚡', title: 'Super Carga', desc: 'Acumular 50 o más Fichas Azules', unlocked: false },
+      { id: 't4', emoji: '🛍️', title: 'Cliente VIP', desc: 'Realizar tu primer canje en la Tiendita', unlocked: false },
+      { id: 't5', emoji: '🔥', title: 'Imparable', desc: 'Mantener una racha de 7 días seguidos', unlocked: false }
+    ];
+
+    function updateTrophiesView() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      const state = saved ? JSON.parse(saved) : {};
+
+      // Fichas en header
+      const tokensEl = document.getElementById('trophy-blue-tokens');
+      if (tokensEl && state.childProfile) {
+        tokensEl.innerText = state.childProfile.blueTokens ?? 0;
+      }
+
+      // Nombre y Avatar
+      const nameEl = document.getElementById('child-header-name');
+      const avatarEl = document.getElementById('child-header-avatar');
+      if (nameEl && state.childProfile?.name) nameEl.innerText = state.childProfile.name;
+      if (avatarEl && state.childProfile?.avatar) avatarEl.innerText = state.childProfile.avatar;
+
+      // Calcular trofeos automáticos basados en estado
+      const currentTokens = state.childProfile?.blueTokens || 0;
+      const trophies = defaultTrophies.map(t => {
+        if (t.id === 't3' && currentTokens >= 50) t.unlocked = true;
+        return t;
+      });
+
+      const container = document.getElementById('trophies-container');
+      if (container) {
+        container.innerHTML = trophies.map(t => `
+          <div class="p-4 rounded-2xl border transition flex items-center justify-between gap-3 ${
+            t.unlocked 
+              ? 'bg-white border-purple-200/80 shadow-sm' 
+              : 'bg-slate-100/70 border-slate-200 opacity-60'
+          }">
+            <div class="flex items-center gap-3.5">
+              <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl border shrink-0 ${
+                t.unlocked ? 'bg-purple-50 border-purple-100' : 'bg-slate-200 border-slate-300 grayscale'
+              }">
+                ${t.unlocked ? t.emoji : '🔒'}
+              </div>
+              <div>
+                <h4 class="font-bold text-sm ${t.unlocked ? 'text-slate-900' : 'text-slate-500'}">${t.title}</h4>
+                <p class="text-xs ${t.unlocked ? 'text-slate-500' : 'text-slate-400'}">${t.desc}</p>
+              </div>
+            </div>
+            <span class="text-xs font-black shrink-0 ${t.unlocked ? 'text-purple-600 bg-purple-50 px-2.5 py-1 rounded-lg border border-purple-100' : 'text-slate-400'}">
+              ${t.unlocked ? '¡LOGRADO!' : 'Bloqueado'}
+            </span>
+          </div>
+        `).join('');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      updateTrophiesView();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+---
+// src/components/MissionCard.astro
+interface Props {
+  emoji?: string;
+  title: string;
+  category?: string;
+  tokens: number;
+  onCompleteClick?: string;
+}
+
+const {
+  emoji = "🎯",
+  title,
+  category = "Misión",
+  tokens,
+  onCompleteClick
+} = Astro.props;
+---
+
+<div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200/80 flex items-center justify-between gap-3">
+  <div class="flex items-center gap-3">
+    <span class="text-3xl">{emoji}</span>
+    <div class="space-y-0.5">
+      <span class="text-[9px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md border border-blue-100 uppercase">
+        {category}
+      </span>
+      <h3 class="font-bold text-slate-900 text-sm">{title}</h3>
+    </div>
+  </div>
+  <button 
+    onclick={onCompleteClick || `completeMission('${title}', ${tokens})`} 
+    class="bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold text-xs py-2.5 px-4 rounded-xl shadow transition shrink-0 cursor-pointer"
+  >
+    +{tokens} 🔵
+  </button>
+</div>

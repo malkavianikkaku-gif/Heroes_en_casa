@@ -1,0 +1,428 @@
+---
+// src/pages/padres/dashboard.astro
+import '../../styles/global.css';
+---
+
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Centro de Padres - Héroes en Casa</title>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen pb-24 font-sans">
+
+  <!-- Header con Salida Segura -->
+  <header class="bg-slate-800 border-b border-slate-700 p-4 sticky top-0 z-30">
+    <div class="max-w-md mx-auto flex justify-between items-center">
+      <div class="flex items-center gap-2">
+        <span class="text-xl">👨‍👩‍👦</span>
+        <h1 class="font-black text-white text-base">Centro de Padres</h1>
+      </div>
+
+      <a 
+        href="/" 
+        class="bg-slate-700 hover:bg-slate-600 active:scale-95 text-slate-200 text-xs font-bold py-2 px-3.5 rounded-xl border border-slate-600 shadow transition flex items-center gap-1.5 cursor-pointer"
+      >
+        <span>🔒</span>
+        <span>Salir</span>
+      </a>
+    </div>
+  </header>
+
+  <main class="max-w-md mx-auto p-4 space-y-6">
+
+    <!-- SECCIÓN: Configurar Perfil del Héroe -->
+    <section class="bg-slate-800 p-4 rounded-2xl border border-slate-700 space-y-3">
+      <div class="flex items-center gap-2">
+        <span class="text-xl">🦸‍♂️</span>
+        <div>
+          <h2 class="text-xs font-bold text-white uppercase tracking-wider">Perfil del Héroe</h2>
+          <p class="text-[11px] text-slate-400">Personaliza el nombre y avatar de tu hijo.</p>
+        </div>
+      </div>
+
+      <form id="profile-form" class="space-y-3">
+        <div class="grid grid-cols-4 gap-2">
+          <div class="col-span-1">
+            <label class="block text-[10px] font-bold text-slate-400 mb-1">Avatar</label>
+            <input type="text" id="profile-avatar" placeholder="👦" maxlength="2" class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-1 text-center text-base text-white outline-none focus:ring-2 focus:ring-blue-500" />
+          </div>
+          <div class="col-span-3">
+            <label class="block text-[10px] font-bold text-slate-400 mb-1">Nombre del Héroe</label>
+            <input type="text" id="profile-name" placeholder="Ángel" required class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-xs text-white outline-none focus:ring-2 focus:ring-blue-500" />
+          </div>
+        </div>
+        <button type="submit" class="w-full bg-slate-700 hover:bg-slate-600 active:scale-98 text-white font-bold py-2 rounded-xl text-xs transition cursor-pointer">
+          Actualizar Perfil
+        </button>
+      </form>
+    </section>
+
+    <!-- SECCIÓN 0: Registrar Super-Logro Rápido -->
+    <section class="bg-gradient-to-r from-blue-900/60 to-indigo-900/60 p-4 rounded-2xl border border-blue-500/30 space-y-3 shadow-lg">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">🌟</span>
+          <div>
+            <h2 class="text-xs font-black text-blue-200 uppercase tracking-wider">Otorgar Super-Logro</h2>
+            <p class="text-[11px] text-slate-300">Premia conductas o esfuerzos extraordinarios al instante.</p>
+          </div>
+        </div>
+      </div>
+
+      <form id="super-logro-form" class="space-y-2.5">
+        <div class="grid grid-cols-4 gap-2">
+          <div class="col-span-1">
+            <input type="text" id="logro-emoji" placeholder="⭐" maxlength="2" value="⭐" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl py-2 px-1 text-center text-base text-white outline-none focus:ring-2 focus:ring-amber-400" />
+          </div>
+          <div class="col-span-3">
+            <input type="text" id="logro-title" placeholder="Ej. ¡Mantuvo la calma y ayudó en casa!" required class="w-full bg-slate-900/90 border border-slate-700 rounded-xl py-2 px-3 text-xs text-white outline-none focus:ring-2 focus:ring-amber-400" />
+          </div>
+        </div>
+
+        <div class="flex gap-2">
+          <div class="w-1/3">
+            <input type="number" id="logro-tokens" min="1" max="100" value="15" required class="w-full bg-slate-900/90 border border-slate-700 rounded-xl py-2 px-2 text-center text-xs font-bold text-blue-300 outline-none focus:ring-2 focus:ring-amber-400" />
+          </div>
+          <button type="submit" class="w-2/3 bg-amber-500 hover:bg-amber-400 active:scale-95 text-slate-950 font-black py-2 rounded-xl text-xs shadow-md transition cursor-pointer flex items-center justify-center gap-1">
+            <span>🚀 Otorgar Fichas</span>
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- SECCIÓN 1: Aprobaciones Pendientes -->
+    <section class="space-y-3">
+      <div class="flex justify-between items-center">
+        <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider">⏳ Solicitudes Pendientes</h2>
+        <span id="pending-count" class="text-xs font-bold bg-amber-500/20 text-amber-300 px-2.5 py-0.5 rounded-full border border-amber-500/30">0</span>
+      </div>
+
+      <div id="pending-container" class="space-y-2">
+        <p class="text-xs text-slate-500 text-center py-4 bg-slate-800/40 rounded-2xl border border-slate-800">
+          No hay solicitudes pendientes en este momento.
+        </p>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 2: Administrador Dinámico de Misiones -->
+    <section class="space-y-4 pt-4 border-t border-slate-800">
+      <div class="flex justify-between items-center">
+        <div>
+          <h2 class="text-sm font-bold text-white flex items-center gap-2">
+            <span>🎯</span> Administrar Misiones Diarias
+          </h2>
+          <p class="text-xs text-slate-400">Crea o adapta misiones según las necesidades de tu hijo.</p>
+        </div>
+      </div>
+
+      <form id="add-mission-form" class="bg-slate-800/90 p-4 rounded-2xl border border-slate-700 space-y-3">
+        <h3 class="text-xs font-bold text-blue-400 uppercase tracking-wider">➕ Agregar Nueva Misión</h3>
+        
+        <div class="grid grid-cols-4 gap-2">
+          <div class="col-span-1">
+            <label class="block text-[10px] font-bold text-slate-400 mb-1">Emoji</label>
+            <input type="text" id="mission-emoji" placeholder="🧩" maxlength="2" required class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-2 text-center text-base text-white outline-none focus:ring-2 focus:ring-blue-500" />
+          </div>
+          <div class="col-span-3">
+            <label class="block text-[10px] font-bold text-slate-400 mb-1">Título de la Misión</label>
+            <input type="text" id="mission-title" placeholder="Ej. Ejercicio de Terapia / Lectura" required class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-xs text-white outline-none focus:ring-2 focus:ring-blue-500" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-[10px] font-bold text-slate-400 mb-1">Categoría</label>
+            <select id="mission-category" class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-2 text-xs text-white outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="Higiene">Higiene y Salud</option>
+              <option value="Rutina">Rutina en Casa</option>
+              <option value="Estudio">Estudio y Aprendizaje</option>
+              <option value="Terapia">Terapia / Sensorial</option>
+              <option value="Conducta">Conducta y Autonomía</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold text-slate-400 mb-1">Recompensa (🔵)</label>
+            <input type="number" id="mission-tokens" min="1" max="100" value="10" required class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-xs text-white outline-none focus:ring-2 focus:ring-blue-500" />
+          </div>
+        </div>
+
+        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 active:scale-98 text-white font-bold py-2.5 rounded-xl text-xs shadow transition cursor-pointer">
+          Guardar Misión
+        </button>
+      </form>
+
+      <div class="space-y-2">
+        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">📋 Misiones Activas</h3>
+        <div id="missions-list" class="space-y-2"></div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 3: Administrador Dinámico de Premios / Tiendita -->
+    <section class="space-y-4 pt-4 border-t border-slate-800">
+      <div>
+        <h2 class="text-sm font-bold text-white flex items-center gap-2">
+          <span>🎁</span> Administrar Premios de la Tiendita
+        </h2>
+        <p class="text-xs text-slate-400">Personaliza los premios y su costo en fichas azules.</p>
+      </div>
+
+      <form id="add-reward-form" class="bg-slate-800/90 p-4 rounded-2xl border border-slate-700 space-y-3">
+        <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider">➕ Agregar Nuevo Premio</h3>
+        
+        <div class="grid grid-cols-4 gap-2">
+          <div class="col-span-1">
+            <label class="block text-[10px] font-bold text-slate-400 mb-1">Emoji</label>
+            <input type="text" id="reward-emoji" placeholder="🎨" maxlength="2" required class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-2 text-center text-base text-white outline-none focus:ring-2 focus:ring-amber-500" />
+          </div>
+          <div class="col-span-3">
+            <label class="block text-[10px] font-bold text-slate-400 mb-1">Nombre del Premio</label>
+            <input type="text" id="reward-title" placeholder="Ej. 30 min de Plastilina / Helado" required class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-xs text-white outline-none focus:ring-2 focus:ring-amber-500" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-[10px] font-bold text-slate-400 mb-1">Descripción Corta</label>
+            <input type="text" id="reward-desc" placeholder="Ej. Tiempo de juego sensorial" class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-xs text-white outline-none focus:ring-2 focus:ring-amber-500" />
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold text-slate-400 mb-1">Costo (🔵)</label>
+            <input type="number" id="reward-cost" min="1" max="500" value="30" required class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-xs text-white outline-none focus:ring-2 focus:ring-amber-500" />
+          </div>
+        </div>
+
+        <button type="submit" class="w-full bg-amber-600 hover:bg-amber-500 active:scale-98 text-white font-bold py-2.5 rounded-xl text-xs shadow transition cursor-pointer">
+          Guardar Premio
+        </button>
+      </form>
+
+      <div class="space-y-2">
+        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">🛍️ Catálogo de Premios</h3>
+        <div id="rewards-list" class="space-y-2"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // @ts-nocheck
+    const STORAGE_KEY = 'family_app_state_v1';
+
+    const defaultMissions = [
+      { id: 'm1', emoji: '🦷', title: 'Lavarse los dientes', category: 'Higiene', tokens: 5 },
+      { id: 'm2', emoji: '🧸', title: 'Recoger juguetes y ordenar', category: 'Rutina', tokens: 10 },
+      { id: 'm3', emoji: '📚', title: 'Hacer la tarea escolar', category: 'Estudio', tokens: 15 }
+    ];
+
+    const defaultRewards = [
+      { id: 'r1', emoji: '🎮', title: '1 hora de videojuegos', desc: 'Tiempo libre en consola o PC', cost: 30 },
+      { id: 'r2', emoji: '🎬', title: 'Elegir película del fin de semana', desc: 'Elección de peli familiar', cost: 40 },
+      { id: 'r3', emoji: '🍦', title: 'Ir por un helado', desc: 'Helado del sabor favorito', cost: 50 }
+    ];
+
+    function getState() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (!saved) return { 
+        childProfile: { name: 'Ángel', avatar: '👦', blueTokens: 0 },
+        missions: defaultMissions, 
+        rewards: defaultRewards, 
+        pendingApprovals: [] 
+      };
+      const state = JSON.parse(saved);
+      if (!state.childProfile) state.childProfile = { name: 'Ángel', avatar: '👦', blueTokens: 0 };
+      if (!state.missions || state.missions.length === 0) state.missions = defaultMissions;
+      if (!state.rewards || state.rewards.length === 0) state.rewards = defaultRewards;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      return state;
+    }
+
+    function renderDashboard() {
+      const state = getState();
+
+      // Rellenar datos del formulario de perfil
+      const nameInput = document.getElementById('profile-name');
+      const avatarInput = document.getElementById('profile-avatar');
+      if (nameInput && state.childProfile) nameInput.value = state.childProfile.name || 'Ángel';
+      if (avatarInput && state.childProfile) avatarInput.value = state.childProfile.avatar || '👦';
+
+      // Render Misiones
+      const missionsContainer = document.getElementById('missions-list');
+      if (missionsContainer) {
+        missionsContainer.innerHTML = state.missions.map(m => `
+          <div class="bg-slate-800 p-3 rounded-xl border border-slate-700 flex items-center justify-between gap-2">
+            <div class="flex items-center gap-3">
+              <span class="text-2xl">${m.emoji || '🎯'}</span>
+              <div>
+                <h4 class="font-bold text-xs text-white">${m.title}</h4>
+                <span class="text-[10px] text-blue-400 font-semibold">${m.category} • +${m.tokens} 🔵</span>
+              </div>
+            </div>
+            <button onclick="deleteMission('${m.id}')" class="text-slate-500 hover:text-red-400 p-1 text-xs font-bold transition cursor-pointer">
+              🗑️
+            </button>
+          </div>
+        `).join('');
+      }
+
+      // Render Premios
+      const rewardsContainer = document.getElementById('rewards-list');
+      if (rewardsContainer) {
+        rewardsContainer.innerHTML = state.rewards.map(r => `
+          <div class="bg-slate-800 p-3 rounded-xl border border-slate-700 flex items-center justify-between gap-2">
+            <div class="flex items-center gap-3">
+              <span class="text-2xl">${r.emoji || '🎁'}</span>
+              <div>
+                <h4 class="font-bold text-xs text-white">${r.title}</h4>
+                <span class="text-[10px] text-amber-400 font-semibold">${r.cost} 🔵 ${r.desc ? '• ' + r.desc : ''}</span>
+              </div>
+            </div>
+            <button onclick="deleteReward('${r.id}')" class="text-slate-500 hover:text-red-400 p-1 text-xs font-bold transition cursor-pointer">
+              🗑️
+            </button>
+          </div>
+        `).join('');
+      }
+
+      // Render Aprobaciones Pendientes
+      const pendingContainer = document.getElementById('pending-container');
+      const pendingCount = document.getElementById('pending-count');
+      const pending = state.pendingApprovals || [];
+
+      if (pendingCount) pendingCount.innerText = pending.length;
+
+      if (pendingContainer) {
+        if (pending.length === 0) {
+          pendingContainer.innerHTML = `
+            <p class="text-xs text-slate-500 text-center py-4 bg-slate-800/40 rounded-2xl border border-slate-800">
+              No hay solicitudes pendientes en este momento.
+            </p>`;
+        } else {
+          pendingContainer.innerHTML = pending.map(item => `
+            <div class="bg-slate-800 p-3.5 rounded-2xl border border-slate-700 flex items-center justify-between gap-3">
+              <div>
+                <span class="text-[10px] font-bold uppercase tracking-wider ${item.type === 'REWARD' ? 'text-amber-400' : 'text-blue-400'}">
+                  ${item.type === 'REWARD' ? '🎁 Canje de Premio' : '🎯 Misión Completada'}
+                </span>
+                <h4 class="font-bold text-xs text-white mt-0.5">${item.title}</h4>
+                <p class="text-[10px] text-slate-400">${item.tokens} 🔵</p>
+              </div>
+              <div class="flex gap-1.5 shrink-0">
+                <button onclick="approveRequest('${item.id}', true)" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-3 py-1.5 rounded-lg transition">
+                  ✓
+                </button>
+                <button onclick="approveRequest('${item.id}', false)" class="bg-red-600/80 hover:bg-red-500 text-white font-bold text-xs px-3 py-1.5 rounded-lg transition">
+                  ✕
+                </button>
+              </div>
+            </div>
+          `).join('');
+        }
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderDashboard();
+
+      // Guardar Perfil
+      document.getElementById('profile-form')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const name = document.getElementById('profile-name')?.value || 'Ángel';
+        const avatar = document.getElementById('profile-avatar')?.value || '👦';
+
+        const state = getState();
+        if (!state.childProfile) state.childProfile = { blueTokens: 0 };
+        state.childProfile.name = name;
+        state.childProfile.avatar = avatar;
+
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        alert(`¡Perfil actualizado! Ahora el héroe es ${name}.`);
+      });
+
+      // Guardar Super-Logro
+      document.getElementById('super-logro-form')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const emoji = document.getElementById('logro-emoji')?.value || '⭐';
+        const title = document.getElementById('logro-title')?.value;
+        const tokens = parseInt(document.getElementById('logro-tokens')?.value || '15', 10);
+
+        if (!title) return;
+        const state = getState();
+        if (!state.childProfile) state.childProfile = { name: 'Ángel', avatar: '👦', blueTokens: 0 };
+        
+        state.childProfile.blueTokens = (state.childProfile.blueTokens || 0) + tokens;
+
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        alert(`¡Super-Logro otorgado! Se han sumado +${tokens} 🔵 a ${state.childProfile.name}.`);
+        e.target.reset();
+        document.getElementById('logro-emoji').value = '⭐';
+      });
+
+      // Guardar Misión
+      document.getElementById('add-mission-form')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const emoji = document.getElementById('mission-emoji')?.value || '🎯';
+        const title = document.getElementById('mission-title')?.value;
+        const category = document.getElementById('mission-category')?.value;
+        const tokens = parseInt(document.getElementById('mission-tokens')?.value || '10', 10);
+
+        if (!title) return;
+        const state = getState();
+        state.missions.push({ id: `m_${Date.now()}`, emoji, title, category, tokens });
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        renderDashboard();
+        e.target.reset();
+      });
+
+      // Guardar Premio
+      document.getElementById('add-reward-form')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const emoji = document.getElementById('reward-emoji')?.value || '🎁';
+        const title = document.getElementById('reward-title')?.value;
+        const desc = document.getElementById('reward-desc')?.value || '';
+        const cost = parseInt(document.getElementById('reward-cost')?.value || '30', 10);
+
+        if (!title) return;
+        const state = getState();
+        state.rewards.push({ id: `r_${Date.now()}`, emoji, title, desc, cost });
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        renderDashboard();
+        e.target.reset();
+      });
+    });
+
+    window.deleteMission = function(id) {
+      const state = getState();
+      state.missions = state.missions.filter(m => m.id !== id);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      renderDashboard();
+    };
+
+    window.deleteReward = function(id) {
+      const state = getState();
+      state.rewards = state.rewards.filter(r => r.id !== id);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      renderDashboard();
+    };
+
+    window.approveRequest = function(id, approved) {
+      const state = getState();
+      const req = (state.pendingApprovals || []).find(r => r.id === id);
+
+      if (req && approved) {
+        if (!state.childProfile) state.childProfile = { name: 'Ángel', avatar: '👦', blueTokens: 0 };
+        if (req.type === 'MISSION') {
+          state.childProfile.blueTokens = (state.childProfile.blueTokens || 0) + req.tokens;
+        }
+      } else if (req && !approved && req.type === 'REWARD') {
+        if (!state.childProfile) state.childProfile = { name: 'Ángel', avatar: '👦', blueTokens: 0 };
+        state.childProfile.blueTokens = (state.childProfile.blueTokens || 0) + req.tokens;
+      }
+
+      state.pendingApprovals = (state.pendingApprovals || []).filter(r => r.id !== id);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      renderDashboard();
+    };
+  </script>
+</body>
+</html>

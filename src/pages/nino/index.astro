@@ -1,0 +1,265 @@
+---
+// src/pages/nino/index.astro
+import '../../styles/global.css';
+
+const child = {
+  name: "Angel",
+  streakDays: 5,
+};
+---
+
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panel de {child.name} - Héroes en Casa</title>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen pb-24 font-sans">
+
+  <!-- Header Estilo RPG -->
+  <header class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-5 rounded-b-[2.5rem] shadow-lg sticky top-0 z-30">
+    <div class="max-w-md mx-auto flex justify-between items-center">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl shadow-inner border border-white/30">
+          👦
+        </div>
+        <div>
+          <span class="text-xs uppercase font-bold text-blue-200 tracking-wider">Héroe en Acción</span>
+          <h1 id="child-header-name" class="text-xl font-black">{child.name}</h1>
+        </div>
+      </div>
+      
+      <!-- Contadores de Fichas y Racha -->
+      <div class="flex items-center gap-2">
+        <div class="bg-white/15 backdrop-blur-md px-3.5 py-2 rounded-2xl border border-white/20 flex items-center gap-1.5 shadow-inner">
+          <span class="text-base">🔥</span>
+          <span class="font-black text-sm text-white">{child.streakDays} Días</span>
+        </div>
+        <div class="bg-white/15 backdrop-blur-md px-3 py-2 rounded-2xl border border-white/20 flex items-center gap-1.5 shadow-inner">
+          <span class="text-base">🔵</span>
+          <span id="header-blue-tokens" class="font-black text-sm text-white">0</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-md mx-auto p-4 space-y-6">
+
+    <!-- Sección de Misiones de Hoy -->
+    <section class="space-y-4">
+      <div class="flex justify-between items-center">
+        <h2 class="text-xs font-bold text-slate-500 uppercase tracking-wider">🎯 Misiones de Hoy</h2>
+        <span id="missions-counter" class="text-xs font-bold bg-blue-100 text-blue-700 px-2.5 py-1 rounded-full">Disponibles</span>
+      </div>
+
+      <!-- Lista de Misiones -->
+      <div id="missions-container" class="space-y-3">
+        <!-- Tarjeta de Misión 1 -->
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200/80 flex items-center justify-between gap-3">
+          <div class="space-y-1">
+            <span class="text-[9px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md border border-blue-100 uppercase">Salud e Higiene</span>
+            <h3 class="font-bold text-slate-900 text-sm">Lavarse los dientes</h3>
+            <p class="text-xs text-slate-400">Cepillado completo después de cenar</p>
+          </div>
+          <button onclick="completeMission('Lavarse los dientes', 5)" class="bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold text-xs py-2.5 px-4 rounded-xl shadow transition shrink-0 cursor-pointer">
+            +5 🔵
+          </button>
+        </div>
+
+        <!-- Tarjeta de Misión 2 -->
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200/80 flex items-center justify-between gap-3">
+          <div class="space-y-1">
+            <span class="text-[9px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-100 uppercase">Orden en Casa</span>
+            <h3 class="font-bold text-slate-900 text-sm">Recoger juguetes y ordenar</h3>
+            <p class="text-xs text-slate-400">Dejar la recámara en orden</p>
+          </div>
+          <button onclick="completeMission('Recoger juguetes y ordenar', 10)" class="bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold text-xs py-2.5 px-4 rounded-xl shadow transition shrink-0 cursor-pointer">
+            +10 🔵
+          </button>
+        </div>
+
+        <!-- Tarjeta de Misión 3 -->
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200/80 flex items-center justify-between gap-3">
+          <div class="space-y-1">
+            <span class="text-[9px] font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md border border-indigo-100 uppercase">Estudio</span>
+            <h3 class="font-bold text-slate-900 text-sm">Hacer la tarea escolar</h3>
+            <p class="text-xs text-slate-400">Completar deberes con atención</p>
+          </div>
+          <button onclick="completeMission('Hacer la tarea escolar', 15)" class="bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold text-xs py-2.5 px-4 rounded-xl shadow transition shrink-0 cursor-pointer">
+            +15 🔵
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Botón para regresar al Selector / Salir de rol -->
+    <div class="pt-4 text-center">
+      <a href="/" class="inline-block text-xs font-bold text-slate-400 hover:text-slate-600 transition">
+        🔄 Cambiar de Perfil / Salir
+      </a>
+    </div>
+    
+    <section class="bg-white p-3 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <span class="text-xl">🎨</span>
+        <div>
+          <h3 class="font-bold text-xs text-slate-900">Tema Visual</h3>
+          <p class="text-[10px] text-slate-400">Elige los colores de tu aventura</p>
+        </div>
+      </div>
+      <select id="theme-selector" class="bg-slate-100 border border-slate-300 rounded-xl py-1.5 px-2 text-xs font-bold text-slate-700 outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer">
+        <option value="vibrant">🔵 Vibrante</option>
+        <option value="calm">🌿 Calma (Sensorial)</option>
+        <option value="dark">🌙 Noche</option>
+      </select>
+    </section>
+
+  </main>
+
+  <!-- Navegación Inferior (Bottom Bar) -->
+  <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 py-2 px-6 z-40 shadow-lg">
+    <div class="max-w-md mx-auto flex justify-around items-center">
+      <a href="/nino" class="flex flex-col items-center text-blue-600 font-bold text-xs">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+        </svg>
+        <span>Inicio</span>
+      </a>
+      <a href="/tiendita" class="flex flex-col items-center text-slate-400 hover:text-slate-600 font-bold text-xs">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+        </svg>
+        <span>Tiendita</span>
+      </a>
+      <!-- En la barra de navegación de nino/index.astro y tiendita.astro -->
+      <a href="/nino/logros" class="flex flex-col items-center text-slate-400 hover:text-slate-600 font-bold text-xs">
+       <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L13 3z" />
+       </svg>
+       <span>Trofeos</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- Script de Sincronización -->
+  <!-- En el script de src/pages/nino/index.astro -->
+<script>
+  // @ts-nocheck
+  const STORAGE_KEY = 'family_app_state_v1';
+
+  function applyTheme(theme) {
+    const body = document.body;
+    // Limpiar clases previas de temas
+    body.classList.remove('theme-vibrant', 'theme-calm', 'theme-dark');
+    
+    if (theme === 'calm') {
+      body.style.backgroundColor = '#f0fdf4'; // Verde suave / pastel
+      body.style.color = '#166534';
+    } else if (theme === 'dark') {
+      body.style.backgroundColor = '#0f172a'; // Slate oscuro
+      body.style.color = '#f8fafc';
+    } else {
+      body.style.backgroundColor = '#f8fafc'; // Estándar limpio
+      body.style.color = '#1e293b';
+    }
+
+    // Guardar preferencia en estado
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      const state = JSON.parse(saved);
+      if (!state.childProfile) state.childProfile = {};
+      state.childProfile.theme = theme;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    const state = saved ? JSON.parse(saved) : {};
+    const currentTheme = state.childProfile?.theme || 'vibrant';
+
+    const selector = document.getElementById('theme-selector');
+    if (selector) {
+      selector.value = currentTheme;
+      selector.addEventListener('change', (e) => {
+        applyTheme(e.target.value);
+      });
+    }
+
+    applyTheme(currentTheme);
+  });
+
+  const defaultMissions = [
+    { id: 'm1', emoji: '🦷', title: 'Lavarse los dientes', category: 'Higiene', tokens: 5 },
+    { id: 'm2', emoji: '🧸', title: 'Recoger juguetes y ordenar', category: 'Rutina', tokens: 10 },
+    { id: 'm3', emoji: '📚', title: 'Hacer la tarea escolar', category: 'Estudio', tokens: 15 }
+  ];
+
+  function updateChildView() {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    const state = saved ? JSON.parse(saved) : {};
+
+    const nameEl = document.getElementById('child-header-name');
+    if (nameEl && state.childProfile?.name) {
+      nameEl.innerText = state.childProfile.name;
+    }
+
+    const avatarEl = document.getElementById('child-header-avatar');
+    if (avatarEl && state.childProfile?.avatar) {
+      avatarEl.innerText = state.childProfile.avatar;
+    }
+
+    const tokensEl = document.getElementById('header-blue-tokens');
+    if (tokensEl && state.childProfile) {
+      tokensEl.innerText = state.childProfile.blueTokens ?? 0;
+    }
+
+    // Renderizar misiones dinámicas creadas por los padres
+    const container = document.getElementById('missions-container');
+    const missions = (state.missions && state.missions.length > 0) ? state.missions : defaultMissions;
+
+    if (container) {
+      container.innerHTML = missions.map(m => `
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200/80 flex items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <span class="text-3xl">${m.emoji || '🎯'}</span>
+            <div class="space-y-0.5">
+              <span class="text-[9px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md border border-blue-100 uppercase">${m.category || 'Misión'}</span>
+              <h3 class="font-bold text-slate-900 text-sm">${m.title}</h3>
+            </div>
+          </div>
+          <button onclick="completeMission('${m.title}', ${m.tokens})" class="bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold text-xs py-2.5 px-4 rounded-xl shadow transition shrink-0 cursor-pointer">
+            +${m.tokens} 🔵
+          </button>
+        </div>
+      `).join('');
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    updateChildView();
+  });
+
+  window.completeMission = function(missionTitle, tokens) {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (!saved) return;
+    const state = JSON.parse(saved);
+
+    if (!state.pendingApprovals) state.pendingApprovals = [];
+
+    state.pendingApprovals.push({
+      id: `mis_${Date.now()}`,
+      type: 'MISSION',
+      title: missionTitle,
+      child: state.childProfile?.name || 'Angel',
+      tokens: tokens,
+      time: 'Justo ahora'
+    });
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    updateChildView();
+    alert(`¡Misión enviada para aprobación! (+${tokens} 🔵)`);
+  };
+</script>
+</body>
+</html>

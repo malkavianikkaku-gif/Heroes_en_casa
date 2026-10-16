@@ -1,0 +1,151 @@
+---
+// src/pages/tiendita.astro
+import '../styles/global.css';
+import HeroHeader from '../components/HeroHeader.astro';
+---
+
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tiendita de Recompensas - Héroes en Casa</title>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen pb-24 font-sans">
+
+  <!-- Header Modularizado -->
+  <HeroHeader 
+    title="Canjea tus Fichas" 
+    subtitle="Tiendita de Premios" 
+    avatar="🎁" 
+    tokensId="shop-blue-tokens"
+    gradientFrom="from-amber-500"
+    gradientTo="to-orange-600"
+  />
+
+  <main class="max-w-md mx-auto p-4 space-y-6">
+
+    <!-- Mensaje informativo -->
+    <div class="bg-amber-50 border border-amber-200 p-4 rounded-2xl flex items-center gap-3">
+      <span class="text-2xl">💡</span>
+      <p class="text-xs text-amber-800 font-medium leading-relaxed">
+        ¡Acumula fichas azules completando tus misiones y cámbialas aquí por increíbles premios aprobados por tus papás!
+      </p>
+    </div>
+
+    <!-- Catálogo de Recompensas -->
+    <section class="space-y-4">
+      <h2 class="text-xs font-bold text-slate-500 uppercase tracking-wider">🛍️ Premios Disponibles</h2>
+
+      <!-- CONTENEDOR DINÁMICO (id="rewards-container") -->
+      <div id="rewards-container" class="space-y-3">
+        <!-- Inyectado con JavaScript -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Navegación Inferior (Bottom Bar) -->
+  <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 py-2 px-6 z-40 shadow-lg">
+    <div class="max-w-md mx-auto flex justify-around items-center">
+      <a href="/nino" class="flex flex-col items-center text-slate-400 hover:text-slate-600 font-bold text-xs">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+        </svg>
+        <span>Inicio</span>
+      </a>
+      <a href="/tiendita" class="flex flex-col items-center text-amber-600 font-bold text-xs">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+        </svg>
+        <span>Tiendita</span>
+      </a>
+      <a href="/nino/logros" class="flex flex-col items-center text-slate-400 hover:text-slate-600 font-bold text-xs">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L13 3z" />
+        </svg>
+        <span>Trofeos</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- Script de Sincronización y Canje -->
+  <script>
+    // @ts-nocheck
+    const STORAGE_KEY = 'family_app_state_v1';
+
+    const defaultRewards = [
+      { id: 'r1', emoji: '🎮', title: '1 hora de videojuegos', desc: 'Tiempo libre en consola o PC', cost: 30 },
+      { id: 'r2', emoji: '🎬', title: 'Elegir película del fin de semana', desc: 'Elección de peli familiar', cost: 40 },
+      { id: 'r3', emoji: '🍦', title: 'Ir por un helado', desc: 'Helado del sabor favorito', cost: 50 }
+    ];
+
+    function updateShopView() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      const state = saved ? JSON.parse(saved) : {};
+
+      const tokensEl = document.getElementById('shop-blue-tokens');
+      if (tokensEl && state.childProfile) {
+        tokensEl.innerText = state.childProfile.blueTokens ?? 0;
+      }
+
+      const rewards = (state.rewards && state.rewards.length > 0) ? state.rewards : defaultRewards;
+      const container = document.getElementById('rewards-container');
+
+      if (container) {
+        container.innerHTML = rewards.map(r => `
+          <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200/80 flex items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 rounded-2xl bg-amber-50 flex items-center justify-center text-2xl border border-amber-100 shrink-0">
+                ${r.emoji || '🎁'}
+              </div>
+              <div class="space-y-0.5">
+                <h3 class="font-bold text-slate-900 text-sm">${r.title}</h3>
+                ${r.desc ? `<p class="text-xs text-slate-400">\${r.desc}</p>` : ''}
+                <span class="inline-block font-black text-xs text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md mt-1">${r.cost} 🔵</span>
+              </div>
+            </div>
+            <button onclick="redeemReward('${r.title}', ${r.cost})" class="bg-amber-500 hover:bg-amber-600 active:scale-95 text-white font-bold text-xs py-2.5 px-4 rounded-xl shadow transition shrink-0 cursor-pointer">
+              Canjear
+            </button>
+          </div>
+        `).join('');
+      }
+    }
+
+    window.redeemReward = function(rewardTitle, cost) {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (!saved) return;
+      const state = JSON.parse(saved);
+
+      const currentTokens = state.childProfile?.blueTokens || 0;
+
+      if (currentTokens < cost) {
+        alert(`¡Te faltan fichas azules! Necesitas ${cost} 🔵 y tienes ${currentTokens} 🔵.`);
+        return;
+      }
+
+      if (!state.pendingApprovals) state.pendingApprovals = [];
+
+      state.pendingApprovals.push({
+        id: `rew_${Date.now()}`,
+        type: 'REWARD',
+        title: rewardTitle,
+        child: state.childProfile?.name || 'Ángel',
+        tokens: cost,
+        time: 'Justo ahora'
+      });
+
+      state.childProfile.blueTokens = currentTokens - cost;
+
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      updateShopView();
+
+      alert(`¡Solicitud enviada a tus papás! Has canjeado "${rewardTitle}" por ${cost} 🔵.`);
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      updateShopView();
+    });
+  </script>
+</body>
+</html>

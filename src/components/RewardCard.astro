@@ -1,0 +1,39 @@
+---
+// src/components/RewardCard.astro
+interface Props {
+  emoji?: string;
+  title: string;
+  desc?: string;
+  cost: number;
+  onRedeemClick?: string;
+}
+
+const {
+  emoji = "🎁",
+  title,
+  desc,
+  cost,
+  onRedeemClick
+} = Astro.props;
+---
+
+<div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200/80 flex items-center justify-between gap-3">
+  <div class="flex items-center gap-3">
+    <div class="w-12 h-12 rounded-2xl bg-amber-50 flex items-center justify-center text-2xl border border-amber-100 shrink-0">
+      {emoji}
+    </div>
+    <div class="space-y-0.5">
+      <h3 class="font-bold text-slate-900 text-sm">{title}</h3>
+      {desc && <p class="text-xs text-slate-400">{desc}</p>}
+      <span class="inline-block font-black text-xs text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md mt-1">
+        {cost} 🔵
+      </span>
+    </div>
+  </div>
+  <button 
+    onclick={onRedeemClick || `redeemReward('${title}', ${cost})`} 
+    class="bg-amber-500 hover:bg-amber-600 active:scale-95 text-white font-bold text-xs py-2.5 px-4 rounded-xl shadow transition shrink-0 cursor-pointer"
+  >
+    Canjear
+  </button>
+</div>

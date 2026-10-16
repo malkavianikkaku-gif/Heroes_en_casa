@@ -1,11 +1,193 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+// src/pages/index.astro
+import '../styles/global.css';
 ---
 
-<Layout>
-	<Welcome />
-</Layout>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0f172a" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <title>Héroes en Casa - Portal Familiar</title>
+</head>
+<body class="bg-slate-900 text-white min-h-screen flex items-center justify-center p-4 font-sans">
+
+  <main class="w-full max-w-md space-y-6 text-center">
+    
+    <!-- Logo / Encabezado -->
+    <div class="space-y-2">
+      <div class="w-20 h-20 bg-blue-600 rounded-3xl mx-auto flex items-center justify-center text-4xl shadow-lg shadow-blue-500/30 border border-blue-400/30">
+        🛡️
+      </div>
+      <h1 class="text-2xl font-black tracking-tight">Héroes en Casa</h1>
+      <p id="family-welcome-text" class="text-sm text-slate-400">Selecciona quién va a usar la aplicación</p>
+    </div>
+
+    <!-- PANTALLA 1: Selector de Perfiles (Si ya existe la familia) -->
+    <div id="profile-selector" class="space-y-4 hidden">
+      <a 
+        href="/nino" 
+        class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 p-5 rounded-3xl shadow-xl flex items-center justify-between border border-blue-400/20 active:scale-98 transition group"
+      >
+        <div class="flex items-center gap-4">
+          <span class="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center text-3xl shadow-inner">
+            👦
+          </span>
+          <div class="text-left">
+            <span id="child-profile-name" class="font-black text-lg block leading-tight">Modo Hijo</span>
+            <span class="text-xs text-blue-200">Misiones, Fichas y Tiendita</span>
+          </div>
+        </div>
+        <span class="text-2xl group-hover:translate-x-1 transition-transform">➡️</span>
+      </a>
+
+      <button 
+        id="btn-open-pin-modal"
+        class="w-full bg-slate-800 hover:bg-slate-700/80 p-5 rounded-3xl border border-slate-700 flex items-center justify-between active:scale-98 transition group"
+      >
+        <div class="flex items-center gap-4">
+          <span class="w-14 h-14 rounded-2xl bg-slate-700/60 flex items-center justify-center text-3xl">
+            👨‍👩‍👦
+          </span>
+          <div class="text-left">
+            <span class="font-black text-lg block text-slate-100 leading-tight">Centro de Padres</span>
+            <span class="text-xs text-slate-400">Aprobaciones y Configuración</span>
+          </div>
+        </div>
+        <span class="text-2xl group-hover:translate-x-1 transition-transform">🔒</span>
+      </button>
+    </div>
+
+    <!-- PANTALLA 2: Configuración Inicial / Onboarding (Si es la primera vez) -->
+    <form id="onboarding-form" class="bg-slate-800/80 p-6 rounded-3xl border border-slate-700 space-y-4 text-left hidden">
+      <h2 class="text-lg font-bold text-white text-center">¡Bienvenida Familia! 🎉</h2>
+      <p class="text-xs text-slate-400 text-center mb-4">Configuremos los datos para empezar a usar la app.</p>
+
+      <div>
+        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Nombre de la Familia</label>
+        <input type="text" id="setup-family-name" placeholder="Ej. Familia Hernández" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:ring-2 focus:ring-blue-500 outline-none" />
+      </div>
+
+      <div>
+        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Nombre de tu hijo/a</label>
+        <input type="text" id="setup-child-name" placeholder="Ej. Santi" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:ring-2 focus:ring-blue-500 outline-none" />
+      </div>
+
+      <div>
+        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">PIN de Seguridad para Papás (4 dígitos)</label>
+        <input type="password" id="setup-pin" maxlength="4" pattern="[0-9]{4}" placeholder="1234" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white text-center font-mono tracking-widest focus:ring-2 focus:ring-blue-500 outline-none" />
+      </div>
+
+      <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3.5 rounded-2xl text-sm shadow-lg shadow-blue-600/30 transition">
+        Guardar y Comenzar
+      </button>
+    </form>
+
+  </main>
+
+  <!-- MODAL PIN PARA PADRES -->
+  <div id="pin-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-slate-800 border border-slate-700 w-full max-w-xs rounded-3xl p-6 text-center space-y-4">
+      <div class="w-12 h-12 bg-slate-700 rounded-2xl mx-auto flex items-center justify-center text-2xl">
+        🔒
+      </div>
+      <div>
+        <h3 class="font-bold text-white text-base">Acceso Papás</h3>
+        <p class="text-xs text-slate-400 mt-1">Ingresa tu PIN de 4 dígitos</p>
+      </div>
+
+      <input type="password" id="input-parent-pin" maxlength="4" pattern="[0-9]{4}" placeholder="••••" class="w-full bg-slate-900 border border-slate-700 rounded-xl py-3 text-center text-xl font-mono text-white tracking-widest outline-none focus:ring-2 focus:ring-blue-500" />
+
+      <div class="flex gap-2">
+        <button type="button" id="btn-close-pin" class="flex-1 bg-slate-700 text-slate-300 font-bold py-2.5 rounded-xl text-xs">Cancelar</button>
+        <button type="button" id="btn-verify-pin" class="flex-1 bg-blue-600 text-white font-bold py-2.5 rounded-xl text-xs">Entrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script de Verificación y Estado -->
+  <script>
+    // @ts-nocheck
+    import { registerSW } from 'virtual:pwa-register';
+
+    registerSW({ immediate: true });
+
+    const STORAGE_KEY = 'family_app_state_v1';
+
+    function checkState() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      const profileSelector = document.getElementById('profile-selector');
+      const onboardingForm = document.getElementById('onboarding-form');
+      const childNameEl = document.getElementById('child-profile-name');
+      const welcomeText = document.getElementById('family-welcome-text');
+
+      if (!saved) {
+        // Primera vez: mostrar formulario de registro
+        onboardingForm?.classList.remove('hidden');
+      } else {
+        // Ya existe: mostrar selector de usuarios
+        const state = JSON.parse(saved);
+        if (childNameEl) childNameEl.innerText = `Soy ${state.childProfile.name || 'Angel'}`;
+        if (welcomeText) welcomeText.innerText = state.family?.name || 'Familia';
+        profileSelector?.classList.remove('hidden');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      checkState();
+
+      // Guardar Configuración Inicial
+      document.getElementById('onboarding-form')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const familyName = document.getElementById('setup-family-name')?.value || 'Mi Familia';
+        const childName = document.getElementById('setup-child-name')?.value || 'Santi';
+        const pin = document.getElementById('setup-pin')?.value || '1234';
+
+        const initialState = {
+          family: { name: familyName, pin: pin },
+          childProfile: { name: childName, blueTokens: 80, redTokens: 10 },
+          pendingApprovals: [],
+          history: []
+        };
+
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(initialState));
+        location.reload();
+      });
+
+      // Lógica de Modal PIN
+      const modal = document.getElementById('pin-modal');
+      const pinInput = document.getElementById('input-parent-pin');
+
+      document.getElementById('btn-open-pin-modal')?.addEventListener('click', () => {
+        modal?.classList.remove('hidden');
+        pinInput?.focus();
+      });
+
+      document.getElementById('btn-close-pin')?.addEventListener('click', () => {
+        modal?.classList.add('hidden');
+        if (pinInput) pinInput.value = '';
+      });
+
+      document.getElementById('btn-verify-pin')?.addEventListener('click', () => {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (!saved) return;
+        const state = JSON.parse(saved);
+        const correctPin = state.family?.pin || '1234';
+
+        if (pinInput?.value === correctPin) {
+          window.location.href = '/padres/dashboard';
+        } else {
+          alert('PIN incorrecto. Inténtalo de nuevo.');
+          if (pinInput) pinInput.value = '';
+        }
+      });
+    });
+
+    
+    
+  </script>
+</body>
+</html>

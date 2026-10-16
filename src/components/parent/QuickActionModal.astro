@@ -1,0 +1,108 @@
+---
+// src/components/parent/QuickActionModals.astro
+import '../styles/global.css';
+---
+
+<!-- ========================================== -->
+<!-- 1. MODAL: REGISTRAR LOGRO ESPECIAL (AZUL) -->
+<!-- ========================================== -->
+<div id="modal-blue" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 hidden transition-opacity duration-200">
+  <div class="bg-white w-full sm:max-w-md rounded-t-3xl sm:rounded-3xl p-6 shadow-2xl space-y-5 animate-in slide-in-from-bottom duration-300">
+    
+    <!-- Encabezado -->
+    <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+      <div class="flex items-center gap-2">
+        <span class="w-8 h-8 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-lg">🔵</span>
+        <div>
+          <h3 class="font-black text-slate-900 text-base leading-tight">Registrar Logro Especial</h3>
+          <p class="text-xs text-slate-400">Sumará Fichas Azules al saldo de Santi</p>
+        </div>
+      </div>
+      <button type="button" class="close-modal text-slate-400 hover:text-slate-600 p-1 font-bold text-xl" data-target="modal-blue">✕</button>
+    </div>
+
+    <!-- Formulario -->
+    <form id="form-blue-achievement" class="space-y-4">
+      <div>
+        <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1">Descripción de la conducta</label>
+        <input 
+          type="text" 
+          id="blue-description" 
+          placeholder="Ej. Guardó la calma ante la frustración / Hizo tarea sin pedirlo" 
+          required 
+          class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition"
+        />
+      </div>
+
+      <!-- Selección Rápida de Fichas -->
+      <div>
+        <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">Fichas Azules a otorgar</label>
+        <div class="grid grid-cols-4 gap-2">
+          <button type="button" class="chip-btn-blue bg-slate-100 hover:bg-blue-50 text-slate-700 hover:text-blue-600 font-bold py-2.5 rounded-xl border border-slate-200 text-sm transition" data-val="5">+5</button>
+          <button type="button" class="chip-btn-blue bg-blue-600 text-white font-bold py-2.5 rounded-xl border border-blue-600 text-sm shadow-sm transition" data-val="10">+10</button>
+          <button type="button" class="chip-btn-blue bg-slate-100 hover:bg-blue-50 text-slate-700 hover:text-blue-600 font-bold py-2.5 rounded-xl border border-slate-200 text-sm transition" data-val="15">+15</button>
+          <button type="button" class="chip-btn-blue bg-slate-100 hover:bg-blue-50 text-slate-700 hover:text-blue-600 font-bold py-2.5 rounded-xl border border-slate-200 text-sm transition" data-val="20">+20</button>
+        </div>
+        <input type="hidden" id="blue-tokens-input" value="10" />
+      </div>
+
+      <!-- Acciones -->
+      <div class="flex gap-2 pt-2">
+        <button type="button" class="close-modal flex-1 bg-slate-100 text-slate-600 font-bold py-3 rounded-xl text-sm" data-target="modal-blue">Cancelar</button>
+        <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl text-sm shadow-md active:scale-95 transition">Abonar Fichas</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ========================================== -->
+<!-- 2. MODAL: REGISTRAR FALTA / ROJA           -->
+<!-- ========================================== -->
+<div id="modal-red" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 hidden transition-opacity duration-200">
+  <div class="bg-white w-full sm:max-w-md rounded-t-3xl sm:rounded-3xl p-6 shadow-2xl space-y-5 animate-in slide-in-from-bottom duration-300">
+    
+    <!-- Encabezado -->
+    <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+      <div class="flex items-center gap-2">
+        <span class="w-8 h-8 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center font-bold text-lg">🔴</span>
+        <div>
+          <h3 class="font-black text-slate-900 text-base leading-tight">Registrar Falta / Saldo Rojo</h3>
+          <p class="text-xs text-slate-400">Registra una falta sin borrar Fichas Azules</p>
+        </div>
+      </div>
+      <button type="button" class="close-modal text-slate-400 hover:text-slate-600 p-1 font-bold text-xl" data-target="modal-red">✕</button>
+    </div>
+
+    <!-- Formulario -->
+    <form id="form-red-penalty" class="space-y-4">
+      <div>
+        <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1">Motivo de la falta</label>
+        <input 
+          type="text" 
+          id="red-description" 
+          placeholder="Ej. Berrinche en la tienda / Falta de respeto / No apagar la TV" 
+          required 
+          class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:bg-white transition"
+        />
+      </div>
+
+      <!-- Selección Rápida de Fichas Rojas -->
+      <div>
+        <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">Fichas Rojas a acumular</label>
+        <div class="grid grid-cols-4 gap-2">
+          <button type="button" class="chip-btn-red bg-slate-100 hover:bg-rose-50 text-slate-700 hover:text-rose-600 font-bold py-2.5 rounded-xl border border-slate-200 text-sm transition" data-val="5">5</button>
+          <button type="button" class="chip-btn-red bg-rose-600 text-white font-bold py-2.5 rounded-xl border border-rose-600 text-sm shadow-sm transition" data-val="10">10</button>
+          <button type="button" class="chip-btn-red bg-slate-100 hover:bg-rose-50 text-slate-700 hover:text-rose-600 font-bold py-2.5 rounded-xl border border-slate-200 text-sm transition" data-val="15">15</button>
+          <button type="button" class="chip-btn-red bg-slate-100 hover:bg-rose-50 text-slate-700 hover:text-rose-600 font-bold py-2.5 rounded-xl border border-slate-200 text-sm transition" data-val="20">20</button>
+        </div>
+        <input type="hidden" id="red-tokens-input" value="10" />
+      </div>
+
+      <!-- Acciones -->
+      <div class="flex gap-2 pt-2">
+        <button type="button" class="close-modal flex-1 bg-slate-100 text-slate-600 font-bold py-3 rounded-xl text-sm" data-target="modal-red">Cancelar</button>
+        <button type="submit" class="flex-1 bg-rose-600 hover:bg-rose-700 text-white font-bold py-3 rounded-xl text-sm shadow-md active:scale-95 transition">Registrar Falta</button>
+      </div>
+    </form>
+  </div>
+</div>
