@@ -57,6 +57,60 @@ import '../../styles/global.css';
         </button>
       </form>
     </section>
+    <!-- SECCIÓN 1: Código para Unirse a la Familia -->
+    <section class="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-sm space-y-4">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-xl text-blue-600 font-bold border border-blue-100">
+          🔗
+        </div>
+        <div>
+          <h3 class="font-bold text-slate-900 text-sm">Unirse a la Familia</h3>
+          <p class="text-xs text-slate-400">Código de sincronización multidispositivo</p>
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <label class="block text-xs font-bold text-slate-700">Código de Acceso Familiar</label>
+        <div class="flex items-center gap-2">
+          <input type="text" id="family-code-input" readonly value="HEROES-ANGEL-2026" class="w-full bg-slate-100 border border-slate-300 rounded-xl px-3 py-2 text-xs font-mono font-bold text-slate-700 outline-none" />
+          <button onclick="copyFamilyCode()" class="bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs px-4 py-2 rounded-xl transition shrink-0 cursor-pointer">
+            Copiar
+          </button>
+        </div>
+        <p class="text-[11px] text-slate-400">Usa este código en otro celular o tablet para cargar el mismo progreso de Ángel.</p>
+      </div>
+    </section>
+
+    <!-- SECCIÓN: Personalización Visual Avanzada (Fondo y Avatar) -->
+    <section class="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-sm space-y-6">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center text-xl text-purple-600 font-bold border border-purple-100">
+          🎨
+        </div>
+        <div>
+          <h3 class="font-bold text-slate-900 text-sm">Personalización de Ángel</h3>
+          <p class="text-xs text-slate-400">Sube imágenes para su fondo y su avatar</p>
+        </div>
+      </div>
+
+      <!-- 1. Fondo Personalizado -->
+      <div class="space-y-2 border-b border-slate-100 pb-4">
+        <label class="block text-xs font-bold text-slate-700">🖼️ Fondo de Pantalla Personalizado</label>
+        <input type="file" id="custom-bg-input" accept="image/*" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100 cursor-pointer border border-slate-200 rounded-xl p-1" />
+        <button onclick="saveCustomBg()" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs py-2 rounded-xl shadow transition cursor-pointer">
+          Guardar Fondo de Pantalla
+        </button>
+      </div>
+
+      <!-- 2. Avatar Personalizado -->
+      <div class="space-y-2">
+        <label class="block text-xs font-bold text-slate-700">🦸‍♂️ Avatar de Héroe Personalizado (Foto o Dibujo)</label>
+        <input type="file" id="custom-avatar-input" accept="image/*" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer border border-slate-200 rounded-xl p-1" />
+        <button onclick="saveCustomAvatar()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs py-2 rounded-xl shadow transition cursor-pointer">
+          Guardar Avatar de Héroe
+        </button>
+      </div>
+    </section>
 
     <!-- SECCIÓN 0: Registrar Super-Logro Rápido -->
     <section class="bg-gradient-to-r from-blue-900/60 to-indigo-900/60 p-4 rounded-2xl border border-blue-500/30 space-y-3 shadow-lg">
@@ -422,6 +476,50 @@ import '../../styles/global.css';
       state.pendingApprovals = (state.pendingApprovals || []).filter(r => r.id !== id);
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
       renderDashboard();
+    };
+    // Copiar código familiar
+    window.copyFamilyCode = function() {
+      const codeInput = document.getElementById('family-code-input');
+      navigator.clipboard.writeText(codeInput.value);
+      alert('¡Código de familia copiado al portapapeles!');
+    };
+
+    // Guardar fondo personalizado
+    window.saveCustomBg = function() {
+      const fileInput = document.getElementById('custom-bg-input');
+      if (!fileInput.files || fileInput.files.length === 0) {
+        alert('Por favor selecciona una imagen para el fondo.');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const saved = localStorage.getItem('family_app_state_v1');
+        const state = saved ? JSON.parse(saved) : {};
+        if (!state.childProfile) state.childProfile = {};
+        state.childProfile.customBgImage = e.target.result;
+        localStorage.setItem('family_app_state_v1', JSON.stringify(state));
+        alert('¡Fondo de pantalla guardado con éxito!');
+      };
+      reader.readAsDataURL(fileInput.files[0]);
+    };
+
+    // Guardar avatar personalizado
+    window.saveCustomAvatar = function() {
+      const fileInput = document.getElementById('custom-avatar-input');
+      if (!fileInput.files || fileInput.files.length === 0) {
+        alert('Por favor selecciona una imagen para el avatar.');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const saved = localStorage.getItem('family_app_state_v1');
+        const state = saved ? JSON.parse(saved) : {};
+        if (!state.childProfile) state.childProfile = {};
+        state.childProfile.customAvatarImage = e.target.result;
+        localStorage.setItem('family_app_state_v1', JSON.stringify(state));
+        alert('¡Avatar de héroe guardado con éxito!');
+      };
+      reader.readAsDataURL(fileInput.files[0]);
     };
   </script>
 </body>

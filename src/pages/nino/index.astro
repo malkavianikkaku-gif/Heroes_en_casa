@@ -260,6 +260,28 @@ const child = {
     updateChildView();
     alert(`¡Misión enviada para aprobación! (+${tokens} 🔵)`);
   };
+    const saved = localStorage.getItem('family_app_state_v1');
+    const state = saved ? JSON.parse(saved) : {};
+
+    // 1. Aplicar Avatar (Imagen o Emoji)
+    const avatarEl = document.getElementById('child-header-avatar');
+    if (avatarEl && state.childProfile) {
+      if (state.childProfile.customAvatarImage) {
+        avatarEl.innerHTML = `<img src="${state.childProfile.customAvatarImage}" class="w-full h-full object-cover rounded-2xl" />`;
+      } else if (state.childProfile.avatar) {
+        avatarEl.innerText = state.childProfile.avatar;
+      }
+    }
+
+    // 2. Aplicar Fondo Personalizado
+    const customBg = state.childProfile?.customBgImage;
+    if (customBg) {
+      document.body.style.backgroundImage = `linear-gradient(rgba(248, 250, 252, 0.92), rgba(248, 250, 252, 0.92)), url(${customBg})`;
+      document.body.style.backgroundSize = 'cover';
+      document.body.style.backgroundPosition = 'center';
+      document.body.style.backgroundAttachment = 'fixed';
+    }
+  
 </script>
 </body>
 </html>
