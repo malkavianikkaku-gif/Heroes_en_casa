@@ -100,9 +100,28 @@ import HeroHeader from '../../components/HeroHeader.astro';
 
       // Nombre y Avatar
       const nameEl = document.getElementById('child-header-name');
+     ;
+
+      // 1. Aplicar Avatar (Imagen o Emoji)
       const avatarEl = document.getElementById('child-header-avatar');
+      if (avatarEl && state.childProfile) {
+        if (state.childProfile.customAvatarImage) {
+          avatarEl.innerHTML = `<img src="${state.childProfile.customAvatarImage}" class="w-full h-full object-cover rounded-2xl" />`;
+        } else if (state.childProfile.avatar) {
+          avatarEl.innerText = state.childProfile.avatar;
+        }
+      }
+
+      // 2. Aplicar Fondo Personalizado
+      const customBg = state.childProfile?.customBgImage;
+      if (customBg) {
+        document.body.style.backgroundImage = `linear-gradient(rgba(248, 250, 252, 0.92), rgba(248, 250, 252, 0.92)), url(${customBg})`;
+        document.body.style.backgroundSize = 'cover';
+        document.body.style.backgroundPosition = 'center';
+        document.body.style.backgroundAttachment = 'fixed';
+      }
       if (nameEl && state.childProfile?.name) nameEl.innerText = state.childProfile.name;
-      if (avatarEl && state.childProfile?.avatar) avatarEl.innerText = state.childProfile.avatar;
+      
 
       // Calcular trofeos automáticos basados en estado
       const currentTokens = state.childProfile?.blueTokens || 0;
