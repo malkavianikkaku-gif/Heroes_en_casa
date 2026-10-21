@@ -81,6 +81,46 @@ import '../../styles/global.css';
       </div>
     </section>
 
+    <!-- SECCIÓN: Vincular este dispositivo con el Código Familiar -->
+    <section class="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-sm space-y-4">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-xl text-emerald-600 font-bold border border-emerald-100">
+          🤝
+        </div>
+        <div>
+          <h3 class="font-bold text-slate-900 text-sm">Vincular Otro Dispositivo</h3>
+          <p class="text-xs text-slate-400">Conecta este teléfono al perfil de Ángel</p>
+        </div>
+      </div>
+
+      <div class="space-y-3">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Introduce el Código Familiar</label>
+          <div class="flex items-center gap-2">
+            <input type="text" id="join-code-input" placeholder="Ej. HEROES-ANGEL-2026" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-mono font-bold text-slate-700 outline-none focus:ring-2 focus:ring-purple-500" />
+            <button onclick="linkFamilyDevice()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-2 rounded-xl transition shrink-0 cursor-pointer">
+              Vincular
+            </button>
+          </div>
+        </div>
+
+        <!-- Sincronización rápida por texto/WhatsApp (Ideal para LocalStorage) -->
+        <div class="pt-2 border-t border-slate-100 space-y-2">
+          <label class="block text-xs font-bold text-slate-700">🔄 Sincronización exacta de Fichas y Misiones</label>
+          <p class="text-[11px] text-slate-400">Para pasarle los datos actuales (fichas y misiones) al otro celular, exporta o importa el código de datos:</p>
+          
+          <div class="flex gap-2">
+            <button onclick="exportFamilyData()" class="w-1/2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs py-2 rounded-xl transition cursor-pointer">
+              📤 Copiar Datos
+            </button>
+            <button onclick="importFamilyData()" class="w-1/2 bg-purple-50 hover:bg-purple-100 text-purple-700 font-bold text-xs py-2 rounded-xl transition cursor-pointer">
+              📥 Cargar Datos
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- SECCIÓN: Personalización Visual Avanzada (Fondo y Avatar) -->
     <section class="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-sm space-y-6">
       <div class="flex items-center gap-3">
@@ -482,6 +522,52 @@ import '../../styles/global.css';
       const codeInput = document.getElementById('family-code-input');
       navigator.clipboard.writeText(codeInput.value);
       alert('¡Código de familia copiado al portapapeles!');
+    };
+    // Vincular mediante código familiar básico
+    window.linkFamilyDevice = function() {
+      const input = document.getElementById('join-code-input');
+      const code = input.value.trim();
+
+      if (!code) {
+        alert('Por favor escribe un código de familia válido.');
+        return;
+      }
+
+      const saved = localStorage.getItem('family_app_state_v1');
+      const state = saved ? JSON.parse(saved) : {};
+      
+      state.familyCode = code;
+      localStorage.setItem('family_app_state_v1', JSON.stringify(state));
+
+      alert(`¡Dispositivo vinculado correctamente con el código ${code}! 🎉`);
+      location.reload();
+    };
+
+    // Exportar los datos actuales en texto para pasarlos por WhatsApp al otro papá/mamá
+    window.exportFamilyData = function() {
+      const saved = localStorage.getItem('family_app_state_v1');
+      if (!saved) {
+        alert('No hay datos guardados aún.');
+        return;
+      }
+      navigator.clipboard.writeText(saved);
+      alert('¡Datos de la familia copiados al portapapeles! Pégaselos en un mensaje de WhatsApp al otro dispositivo para que tenga la misma información.');
+    };
+
+    // Importar los datos desde otro dispositivo
+    window.importFamilyData = function() {
+      const jsonString = prompt('Pega aquí el código de datos que te compartieron:');
+      if (!jsonString) return;
+
+      try {
+        // Validar que sea un JSON válido
+        JSON.parse(jsonString);
+        localStorage.setItem('family_app_state_v1', jsonString);
+        alert('¡Datos sincronizados con éxito! La app se actualizará.');
+        location.reload();
+      } catch (e) {
+        alert('El código de datos no es válido. Asegúrate de copiarlo completo.');
+      }
     };
 
     // Guardar fondo personalizado
