@@ -16,28 +16,36 @@ const child = {
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen pb-24 font-sans">
 
-  <!-- Header Estilo RPG -->
-  <header class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-5 rounded-b-[2.5rem] shadow-lg sticky top-0 z-30">
+  <!-- Header Estilo RPG (Tema Morado Épico para Ángel) -->
+  <header class="bg-gradient-to-r from-purple-600 to-indigo-700 text-white p-5 rounded-b-[2.5rem] shadow-lg sticky top-0 z-30">
     <div class="max-w-md mx-auto flex justify-between items-center">
       <div class="flex items-center gap-3">
-        <div id="child-header-avatar" class="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl shadow-inner border border-white/30">
+        <!-- Avatar con ID e overflow-hidden para la imagen personalizada -->
+        <div id="child-header-avatar" class="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl shadow-inner border border-white/30 overflow-hidden">
           👦
         </div>
         <div>
-          <span class="text-xs uppercase font-bold text-blue-200 tracking-wider">Héroe en Acción</span>
+          <span class="text-xs uppercase font-bold text-purple-200 tracking-wider">Héroe en Acción</span>
           <h1 id="child-header-name" class="text-xl font-black">{child.name}</h1>
         </div>
       </div>
       
-      <!-- Contadores de Fichas y Racha -->
-      <div class="flex items-center gap-2">
-        <div class="bg-white/15 backdrop-blur-md px-3.5 py-2 rounded-2xl border border-white/20 flex items-center gap-1.5 shadow-inner">
-          <span class="text-base">🔥</span>
-          <span class="font-black text-sm text-white">{child.streakDays} Días</span>
+      <!-- Contadores de Racha, Fichas Azules y Fichas Rojas -->
+      <div class="flex items-center gap-1.5">
+        <!-- Racha -->
+        <div class="bg-white/15 backdrop-blur-md px-2.5 py-1.5 rounded-2xl border border-white/20 flex items-center gap-1 shadow-inner">
+          <span class="text-xs">🔥</span>
+          <span class="font-black text-xs text-white">{child.streakDays}d</span>
         </div>
-        <div class="bg-white/15 backdrop-blur-md px-3 py-2 rounded-2xl border border-white/20 flex items-center gap-1.5 shadow-inner">
-          <span class="text-base">🔵</span>
-          <span id="header-blue-tokens" class="font-black text-sm text-white">0</span>
+        <!-- Fichas Azules -->
+        <div class="bg-white/15 backdrop-blur-md px-2.5 py-1.5 rounded-2xl border border-white/20 flex items-center gap-1 shadow-inner">
+          <span class="text-xs">🔵</span>
+          <span id="header-blue-tokens" class="font-black text-xs text-white">0</span>
+        </div>
+        <!-- Fichas Rojas -->
+        <div class="bg-white/15 backdrop-blur-md px-2.5 py-1.5 rounded-2xl border border-white/20 flex items-center gap-1 shadow-inner">
+          <span class="text-xs">🔴</span>
+          <span id="header-red-tokens" class="font-black text-xs text-white">0</span>
         </div>
       </div>
     </div>
@@ -49,56 +57,23 @@ const child = {
     <section class="space-y-4">
       <div class="flex justify-between items-center">
         <h2 class="text-xs font-bold text-slate-500 uppercase tracking-wider">🎯 Misiones de Hoy</h2>
-        <span id="missions-counter" class="text-xs font-bold bg-blue-100 text-blue-700 px-2.5 py-1 rounded-full">Disponibles</span>
+        <span id="missions-counter" class="text-xs font-bold bg-purple-100 text-purple-700 px-2.5 py-1 rounded-full">Disponibles</span>
       </div>
 
-      <!-- Lista de Misiones -->
+      <!-- Lista de Misiones Dinámicas -->
       <div id="missions-container" class="space-y-3">
-        <!-- Tarjeta de Misión 1 -->
-        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200/80 flex items-center justify-between gap-3">
-          <div class="space-y-1">
-            <span class="text-[9px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md border border-blue-100 uppercase">Salud e Higiene</span>
-            <h3 class="font-bold text-slate-900 text-sm">Lavarse los dientes</h3>
-            <p class="text-xs text-slate-400">Cepillado completo después de cenar</p>
-          </div>
-          <button onclick="completeMission('Lavarse los dientes', 5)" class="bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold text-xs py-2.5 px-4 rounded-xl shadow transition shrink-0 cursor-pointer">
-            +5 🔵
-          </button>
-        </div>
-
-        <!-- Tarjeta de Misión 2 -->
-        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200/80 flex items-center justify-between gap-3">
-          <div class="space-y-1">
-            <span class="text-[9px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-100 uppercase">Orden en Casa</span>
-            <h3 class="font-bold text-slate-900 text-sm">Recoger juguetes y ordenar</h3>
-            <p class="text-xs text-slate-400">Dejar la recámara en orden</p>
-          </div>
-          <button onclick="completeMission('Recoger juguetes y ordenar', 10)" class="bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold text-xs py-2.5 px-4 rounded-xl shadow transition shrink-0 cursor-pointer">
-            +10 🔵
-          </button>
-        </div>
-
-        <!-- Tarjeta de Misión 3 -->
-        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200/80 flex items-center justify-between gap-3">
-          <div class="space-y-1">
-            <span class="text-[9px] font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md border border-indigo-100 uppercase">Estudio</span>
-            <h3 class="font-bold text-slate-900 text-sm">Hacer la tarea escolar</h3>
-            <p class="text-xs text-slate-400">Completar deberes con atención</p>
-          </div>
-          <button onclick="completeMission('Hacer la tarea escolar', 15)" class="bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold text-xs py-2.5 px-4 rounded-xl shadow transition shrink-0 cursor-pointer">
-            +15 🔵
-          </button>
-        </div>
+        <!-- Se renderizan dinámicamente desde el JS -->
       </div>
     </section>
 
-    <!-- Botón para regresar al Selector / Salir de rol -->
+    <!-- Botón para cambiar de perfil -->
     <div class="pt-4 text-center">
       <a href="/" class="inline-block text-xs font-bold text-slate-400 hover:text-slate-600 transition">
         🔄 Cambiar de Perfil / Salir
       </a>
     </div>
     
+    <!-- Selector de Tema Visual -->
     <section class="bg-white p-3 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between">
       <div class="flex items-center gap-2">
         <span class="text-xl">🎨</span>
@@ -107,8 +82,8 @@ const child = {
           <p class="text-[10px] text-slate-400">Elige los colores de tu aventura</p>
         </div>
       </div>
-      <select id="theme-selector" class="bg-slate-100 border border-slate-300 rounded-xl py-1.5 px-2 text-xs font-bold text-slate-700 outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer">
-        <option value="vibrant">🔵 Vibrante</option>
+      <select id="theme-selector" class="bg-slate-100 border border-slate-300 rounded-xl py-1.5 px-2 text-xs font-bold text-slate-700 outline-none focus:ring-2 focus:ring-purple-500 cursor-pointer">
+        <option value="vibrant">💜 Morado Épico</option>
         <option value="calm">🌿 Calma (Sensorial)</option>
         <option value="dark">🌙 Noche</option>
       </select>
@@ -119,7 +94,7 @@ const child = {
   <!-- Navegación Inferior (Bottom Bar) -->
   <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 py-2 px-6 z-40 shadow-lg">
     <div class="max-w-md mx-auto flex justify-around items-center">
-      <a href="/nino" class="flex flex-col items-center text-blue-600 font-bold text-xs">
+      <a href="/nino" class="flex flex-col items-center text-purple-600 font-bold text-xs">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
         </svg>
@@ -131,7 +106,6 @@ const child = {
         </svg>
         <span>Tiendita</span>
       </a>
-      <!-- En la barra de navegación de nino/index.astro y tiendita.astro -->
       <a href="/nino/logros" class="flex flex-col items-center text-slate-400 hover:text-slate-600 font-bold text-xs">
        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L13 3z" />
@@ -142,142 +116,141 @@ const child = {
   </nav>
 
   <!-- Script de Sincronización -->
-  <!-- En el script de src/pages/nino/index.astro -->
-<script>
-  // @ts-nocheck
-  const STORAGE_KEY = 'family_app_state_v1';
+  <script>
+    // @ts-nocheck
+    const STORAGE_KEY = 'family_app_state_v1';
 
-  function applyTheme(theme) {
-    const body = document.body;
-    // Limpiar clases previas de temas
-    body.classList.remove('theme-vibrant', 'theme-calm', 'theme-dark');
-    
-    if (theme === 'calm') {
-      body.style.backgroundColor = '#f0fdf4'; // Verde suave / pastel
-      body.style.color = '#166534';
-    } else if (theme === 'dark') {
-      body.style.backgroundColor = '#0f172a'; // Slate oscuro
-      body.style.color = '#f8fafc';
-    } else {
-      body.style.backgroundColor = '#f8fafc'; // Estándar limpio
-      body.style.color = '#1e293b';
-    }
+    function applyTheme(theme) {
+      const body = document.body;
+      body.classList.remove('theme-vibrant', 'theme-calm', 'theme-dark');
+      
+      if (theme === 'calm') {
+        body.style.backgroundColor = '#f0fdf4'; // Verde suave / pastel
+        body.style.color = '#166534';
+      } else if (theme === 'dark') {
+        body.style.backgroundColor = '#0f172a'; // Slate oscuro
+        body.style.color = '#f8fafc';
+      } else {
+        // Morado para Ángel
+        body.style.backgroundColor = '#faf5ff';
+        body.style.color = '#581c87';
+      }
 
-    // Guardar preferencia en estado
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      const state = JSON.parse(saved);
-      if (!state.childProfile) state.childProfile = {};
-      state.childProfile.theme = theme;
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    }
-  }
-
-  document.addEventListener('DOMContentLoaded', () => {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    const state = saved ? JSON.parse(saved) : {};
-    const currentTheme = state.childProfile?.theme || 'vibrant';
-
-    const selector = document.getElementById('theme-selector');
-    if (selector) {
-      selector.value = currentTheme;
-      selector.addEventListener('change', (e) => {
-        applyTheme(e.target.value);
-      });
-    }
-
-    applyTheme(currentTheme);
-  });
-
-  const defaultMissions = [
-    { id: 'm1', emoji: '🦷', title: 'Lavarse los dientes', category: 'Higiene', tokens: 5 },
-    { id: 'm2', emoji: '🧸', title: 'Recoger juguetes y ordenar', category: 'Rutina', tokens: 10 },
-    { id: 'm3', emoji: '📚', title: 'Hacer la tarea escolar', category: 'Estudio', tokens: 15 }
-  ];
-
-  function updateChildView() {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    const state = saved ? JSON.parse(saved) : {};
-
-    const nameEl = document.getElementById('child-header-name');
-    if (nameEl && state.childProfile?.name) {
-      nameEl.innerText = state.childProfile.name;
-    }
-
-    
-
-    // 1. Aplicar Avatar (Imagen o Emoji)
-    const avatarEl = document.getElementById('child-header-avatar');
-    if (avatarEl && state.childProfile) {
-      if (state.childProfile.customAvatarImage) {
-        avatarEl.innerHTML = `<img src="${state.childProfile.customAvatarImage}" class="w-full h-full object-cover rounded-2xl" />`;
-      } else if (state.childProfile.avatar) {
-        avatarEl.innerText = state.childProfile.avatar;
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const state = JSON.parse(saved);
+        if (!state.childProfile) state.childProfile = {};
+        state.childProfile.theme = theme;
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
       }
     }
 
-    // 2. Aplicar Fondo Personalizado
-    const customBg = state.childProfile?.customBgImage;
-    if (customBg) {
-      document.body.style.backgroundImage = `linear-gradient(rgba(248, 250, 252, 0.92), rgba(248, 250, 252, 0.92)), url(${customBg})`;
-      document.body.style.backgroundSize = 'cover';
-      document.body.style.backgroundPosition = 'center';
-      document.body.style.backgroundAttachment = 'fixed';
-    }
+    const defaultMissions = [
+      { id: 'm1', emoji: '🦷', title: 'Lavarse los dientes', category: 'Higiene', tokens: 5 },
+      { id: 'm2', emoji: '🧸', title: 'Recoger juguetes y ordenar', category: 'Rutina', tokens: 10 },
+      { id: 'm3', emoji: '📚', title: 'Hacer la tarea escolar', category: 'Estudio', tokens: 15 }
+    ];
 
-    const tokensEl = document.getElementById('header-blue-tokens');
-    if (tokensEl && state.childProfile) {
-      tokensEl.innerText = state.childProfile.blueTokens ?? 0;
-    }
+    function updateChildView() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      const state = saved ? JSON.parse(saved) : {};
 
-    // Renderizar misiones dinámicas creadas por los padres
-    const container = document.getElementById('missions-container');
-    const missions = (state.missions && state.missions.length > 0) ? state.missions : defaultMissions;
+      // 1. Nombre del niño
+      const nameEl = document.getElementById('child-header-name');
+      if (nameEl && state.childProfile?.name) {
+        nameEl.innerText = state.childProfile.name;
+      }
 
-    if (container) {
-      container.innerHTML = missions.map(m => `
-        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200/80 flex items-center justify-between gap-3">
-          <div class="flex items-center gap-3">
-            <span class="text-3xl">${m.emoji || '🎯'}</span>
-            <div class="space-y-0.5">
-              <span class="text-[9px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md border border-blue-100 uppercase">${m.category || 'Misión'}</span>
-              <h3 class="font-bold text-slate-900 text-sm">${m.title}</h3>
+      // 2. Avatar de héroe
+      const avatarEl = document.getElementById('child-header-avatar');
+      if (avatarEl && state.childProfile) {
+        if (state.childProfile.customAvatarImage) {
+          avatarEl.innerHTML = `<img src="${state.childProfile.customAvatarImage}" class="w-full h-full object-cover rounded-2xl" />`;
+        } else if (state.childProfile.avatar) {
+          avatarEl.innerText = state.childProfile.avatar;
+        }
+      }
+
+      // 3. Fondo personalizado
+      const customBg = state.childProfile?.customBgImage;
+      if (customBg) {
+        document.body.style.backgroundImage = `linear-gradient(rgba(248, 250, 252, 0.92), rgba(248, 250, 252, 0.92)), url(${customBg})`;
+        document.body.style.backgroundSize = 'cover';
+        document.body.style.backgroundPosition = 'center';
+        document.body.style.backgroundAttachment = 'fixed';
+      }
+
+      // 4. Fichas Azules
+      const blueTokensEl = document.getElementById('header-blue-tokens');
+      if (blueTokensEl && state.childProfile) {
+        blueTokensEl.innerText = state.childProfile.blueTokens ?? 0;
+      }
+
+      // 5. Fichas Rojas
+      const redTokensEl = document.getElementById('header-red-tokens');
+      if (redTokensEl && state.childProfile) {
+        redTokensEl.innerText = state.childProfile.redTokens ?? 0;
+      }
+
+      // 6. Renderizar Misiones
+      const container = document.getElementById('missions-container');
+      const missions = (state.missions && state.missions.length > 0) ? state.missions : defaultMissions;
+
+      if (container) {
+        container.innerHTML = missions.map(m => `
+          <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200/80 flex items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <span class="text-3xl">${m.emoji || '🎯'}</span>
+              <div class="space-y-0.5">
+                <span class="text-[9px] font-bold text-purple-600 bg-purple-50 px-2 py-0.5 rounded-md border border-purple-100 uppercase">${m.category || 'Misión'}</span>
+                <h3 class="font-bold text-slate-900 text-sm">${m.title}</h3>
+              </div>
             </div>
+            <button onclick="completeMission('${m.title}', ${m.tokens})" class="bg-purple-600 hover:bg-purple-700 active:scale-95 text-white font-bold text-xs py-2.5 px-4 rounded-xl shadow transition shrink-0 cursor-pointer">
+              +${m.tokens} 🔵
+            </button>
           </div>
-          <button onclick="completeMission('${m.title}', ${m.tokens})" class="bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold text-xs py-2.5 px-4 rounded-xl shadow transition shrink-0 cursor-pointer">
-            +${m.tokens} 🔵
-          </button>
-        </div>
-      `).join('');
+        `).join('');
+      }
     }
-  }
 
-  document.addEventListener('DOMContentLoaded', () => {
-    updateChildView();
-  });
+    document.addEventListener('DOMContentLoaded', () => {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      const state = saved ? JSON.parse(saved) : {};
+      const currentTheme = state.childProfile?.theme || 'vibrant';
 
-  window.completeMission = function(missionTitle, tokens) {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (!saved) return;
-    const state = JSON.parse(saved);
+      const selector = document.getElementById('theme-selector');
+      if (selector) {
+        selector.value = currentTheme;
+        selector.addEventListener('change', (e) => {
+          applyTheme(e.target.value);
+        });
+      }
 
-    if (!state.pendingApprovals) state.pendingApprovals = [];
-
-    state.pendingApprovals.push({
-      id: `mis_${Date.now()}`,
-      type: 'MISSION',
-      title: missionTitle,
-      child: state.childProfile?.name || 'Angel',
-      tokens: tokens,
-      time: 'Justo ahora'
+      applyTheme(currentTheme);
+      updateChildView();
     });
 
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    updateChildView();
-    alert(`¡Misión enviada para aprobación! (+${tokens} 🔵)`);
-  };
-  
-  
-</script>
+    window.completeMission = function(missionTitle, tokens) {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (!saved) return;
+      const state = JSON.parse(saved);
+
+      if (!state.pendingApprovals) state.pendingApprovals = [];
+
+      state.pendingApprovals.push({
+        id: `mis_${Date.now()}`,
+        type: 'MISSION',
+        title: missionTitle,
+        child: state.childProfile?.name || 'Angel',
+        tokens: tokens,
+        time: 'Justo ahora'
+      });
+
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      updateChildView();
+      alert(`¡Misión enviada para aprobación! (+${tokens} 🔵)`);
+    };
+  </script>
 </body>
 </html>

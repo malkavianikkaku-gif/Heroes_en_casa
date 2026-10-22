@@ -57,7 +57,45 @@ import '../../styles/global.css';
         </button>
       </form>
     </section>
-    <!-- SECCIÓN 1: Código para Unirse a la Familia -->
+
+    <!-- SECCIÓN: Control Directo de Fichas (Azules y Rojas) -->
+    <section class="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-sm space-y-4">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center text-xl text-red-600 font-bold border border-red-100">
+          ⚖️
+        </div>
+        <div>
+          <h3 class="font-bold text-slate-900 text-sm">Control Directo de Fichas</h3>
+          <p class="text-xs text-slate-400">Ajusta el saldo de Fichas Azules 🔵 y Rojas 🔴</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3 pt-2">
+        <!-- Panel Fichas Azules -->
+        <div class="bg-blue-50/60 border border-blue-100 p-3.5 rounded-2xl text-center space-y-2">
+          <span class="text-xs font-bold text-blue-700 block">Fichas Azules 🔵</span>
+          <div id="parent-blue-count" class="text-2xl font-black text-blue-900">0</div>
+          <div class="flex justify-center gap-1.5 pt-1">
+            <button type="button" onclick="adjustTokens('blue', -1)" class="bg-white hover:bg-blue-100 text-blue-700 font-bold border border-blue-200 w-8 h-8 rounded-xl text-sm shadow-sm transition active:scale-95 cursor-pointer">-1</button>
+            <button type="button" onclick="adjustTokens('blue', 1)" class="bg-blue-600 hover:bg-blue-700 text-white font-bold w-8 h-8 rounded-xl text-sm shadow-sm transition active:scale-95 cursor-pointer">+1</button>
+            <button type="button" onclick="adjustTokens('blue', 5)" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-2 h-8 rounded-xl text-xs shadow-sm transition active:scale-95 cursor-pointer">+5</button>
+          </div>
+        </div>
+
+        <!-- Panel Fichas Rojas -->
+        <div class="bg-red-50/60 border border-red-100 p-3.5 rounded-2xl text-center space-y-2">
+          <span class="text-xs font-bold text-red-700 block">Fichas Rojas 🔴</span>
+          <div id="parent-red-count" class="text-2xl font-black text-red-900">0</div>
+          <div class="flex justify-center gap-1.5 pt-1">
+            <button type="button" onclick="adjustTokens('red', -1)" class="bg-white hover:bg-red-100 text-red-700 font-bold border border-red-200 w-8 h-8 rounded-xl text-sm shadow-sm transition active:scale-95 cursor-pointer">-1</button>
+            <button type="button" onclick="adjustTokens('red', 1)" class="bg-red-600 hover:bg-red-700 text-white font-bold w-8 h-8 rounded-xl text-sm shadow-sm transition active:scale-95 cursor-pointer">+1</button>
+            <button type="button" onclick="resetRedTokens()" class="bg-slate-800 hover:bg-slate-900 text-white font-bold px-2 h-8 rounded-xl text-[10px] shadow-sm transition active:scale-95 cursor-pointer">Limpiar</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN: Código para Unirse a la Familia -->
     <section class="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-sm space-y-4">
       <div class="flex items-center gap-3">
         <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-xl text-blue-600 font-bold border border-blue-100">
@@ -73,7 +111,7 @@ import '../../styles/global.css';
         <label class="block text-xs font-bold text-slate-700">Código de Acceso Familiar</label>
         <div class="flex items-center gap-2">
           <input type="text" id="family-code-input" readonly value="HEROES-ANGEL-2026" class="w-full bg-slate-100 border border-slate-300 rounded-xl px-3 py-2 text-xs font-mono font-bold text-slate-700 outline-none" />
-          <button onclick="copyFamilyCode()" class="bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs px-4 py-2 rounded-xl transition shrink-0 cursor-pointer">
+          <button type="button" onclick="copyFamilyCode()" class="bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs px-4 py-2 rounded-xl transition shrink-0 cursor-pointer">
             Copiar
           </button>
         </div>
@@ -98,22 +136,22 @@ import '../../styles/global.css';
           <label class="block text-xs font-bold text-slate-700 mb-1">Introduce el Código Familiar</label>
           <div class="flex items-center gap-2">
             <input type="text" id="join-code-input" placeholder="Ej. HEROES-ANGEL-2026" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-mono font-bold text-slate-700 outline-none focus:ring-2 focus:ring-purple-500" />
-            <button onclick="linkFamilyDevice()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-2 rounded-xl transition shrink-0 cursor-pointer">
+            <button type="button" onclick="linkFamilyDevice()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-2 rounded-xl transition shrink-0 cursor-pointer">
               Vincular
             </button>
           </div>
         </div>
 
-        <!-- Sincronización rápida por texto/WhatsApp (Ideal para LocalStorage) -->
+        <!-- Sincronización rápida por texto/WhatsApp -->
         <div class="pt-2 border-t border-slate-100 space-y-2">
           <label class="block text-xs font-bold text-slate-700">🔄 Sincronización exacta de Fichas y Misiones</label>
           <p class="text-[11px] text-slate-400">Para pasarle los datos actuales (fichas y misiones) al otro celular, exporta o importa el código de datos:</p>
           
           <div class="flex gap-2">
-            <button onclick="exportFamilyData()" class="w-1/2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs py-2 rounded-xl transition cursor-pointer">
+            <button type="button" onclick="exportFamilyData()" class="w-1/2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs py-2 rounded-xl transition cursor-pointer">
               📤 Copiar Datos
             </button>
-            <button onclick="importFamilyData()" class="w-1/2 bg-purple-50 hover:bg-purple-100 text-purple-700 font-bold text-xs py-2 rounded-xl transition cursor-pointer">
+            <button type="button" onclick="importFamilyData()" class="w-1/2 bg-purple-50 hover:bg-purple-100 text-purple-700 font-bold text-xs py-2 rounded-xl transition cursor-pointer">
               📥 Cargar Datos
             </button>
           </div>
@@ -137,7 +175,7 @@ import '../../styles/global.css';
       <div class="space-y-2 border-b border-slate-100 pb-4">
         <label class="block text-xs font-bold text-slate-700">🖼️ Fondo de Pantalla Personalizado</label>
         <input type="file" id="custom-bg-input" accept="image/*" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100 cursor-pointer border border-slate-200 rounded-xl p-1" />
-        <button onclick="saveCustomBg()" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs py-2 rounded-xl shadow transition cursor-pointer">
+        <button type="button" onclick="saveCustomBg()" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs py-2 rounded-xl shadow transition cursor-pointer">
           Guardar Fondo de Pantalla
         </button>
       </div>
@@ -146,7 +184,7 @@ import '../../styles/global.css';
       <div class="space-y-2">
         <label class="block text-xs font-bold text-slate-700">🦸‍♂️ Avatar de Héroe Personalizado (Foto o Dibujo)</label>
         <input type="file" id="custom-avatar-input" accept="image/*" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer border border-slate-200 rounded-xl p-1" />
-        <button onclick="saveCustomAvatar()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs py-2 rounded-xl shadow transition cursor-pointer">
+        <button type="button" onclick="saveCustomAvatar()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs py-2 rounded-xl shadow transition cursor-pointer">
           Guardar Avatar de Héroe
         </button>
       </div>
@@ -318,13 +356,15 @@ import '../../styles/global.css';
     function getState() {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (!saved) return { 
-        childProfile: { name: 'Ángel', avatar: '👦', blueTokens: 0 },
+        childProfile: { name: 'Ángel', avatar: '👦', blueTokens: 0, redTokens: 0 },
         missions: defaultMissions, 
         rewards: defaultRewards, 
         pendingApprovals: [] 
       };
       const state = JSON.parse(saved);
-      if (!state.childProfile) state.childProfile = { name: 'Ángel', avatar: '👦', blueTokens: 0 };
+      if (!state.childProfile) state.childProfile = { name: 'Ángel', avatar: '👦', blueTokens: 0, redTokens: 0 };
+      if (state.childProfile.blueTokens === undefined) state.childProfile.blueTokens = 0;
+      if (state.childProfile.redTokens === undefined) state.childProfile.redTokens = 0;
       if (!state.missions || state.missions.length === 0) state.missions = defaultMissions;
       if (!state.rewards || state.rewards.length === 0) state.rewards = defaultRewards;
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
@@ -340,6 +380,13 @@ import '../../styles/global.css';
       if (nameInput && state.childProfile) nameInput.value = state.childProfile.name || 'Ángel';
       if (avatarInput && state.childProfile) avatarInput.value = state.childProfile.avatar || '👦';
 
+      // Actualizar contadores de fichas en el panel de padres
+      const blueEl = document.getElementById('parent-blue-count');
+      if (blueEl) blueEl.innerText = state.childProfile.blueTokens ?? 0;
+
+      const redEl = document.getElementById('parent-red-count');
+      if (redEl) redEl.innerText = state.childProfile.redTokens ?? 0;
+
       // Render Misiones
       const missionsContainer = document.getElementById('missions-list');
       if (missionsContainer) {
@@ -352,7 +399,7 @@ import '../../styles/global.css';
                 <span class="text-[10px] text-blue-400 font-semibold">${m.category} • +${m.tokens} 🔵</span>
               </div>
             </div>
-            <button onclick="deleteMission('${m.id}')" class="text-slate-500 hover:text-red-400 p-1 text-xs font-bold transition cursor-pointer">
+            <button type="button" onclick="deleteMission('${m.id}')" class="text-slate-500 hover:text-red-400 p-1 text-xs font-bold transition cursor-pointer">
               🗑️
             </button>
           </div>
@@ -371,7 +418,7 @@ import '../../styles/global.css';
                 <span class="text-[10px] text-amber-400 font-semibold">${r.cost} 🔵 ${r.desc ? '• ' + r.desc : ''}</span>
               </div>
             </div>
-            <button onclick="deleteReward('${r.id}')" class="text-slate-500 hover:text-red-400 p-1 text-xs font-bold transition cursor-pointer">
+            <button type="button" onclick="deleteReward('${r.id}')" class="text-slate-500 hover:text-red-400 p-1 text-xs font-bold transition cursor-pointer">
               🗑️
             </button>
           </div>
@@ -402,10 +449,10 @@ import '../../styles/global.css';
                 <p class="text-[10px] text-slate-400">${item.tokens} 🔵</p>
               </div>
               <div class="flex gap-1.5 shrink-0">
-                <button onclick="approveRequest('${item.id}', true)" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-3 py-1.5 rounded-lg transition">
+                <button type="button" onclick="approveRequest('${item.id}', true)" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-3 py-1.5 rounded-lg transition cursor-pointer">
                   ✓
                 </button>
-                <button onclick="approveRequest('${item.id}', false)" class="bg-red-600/80 hover:bg-red-500 text-white font-bold text-xs px-3 py-1.5 rounded-lg transition">
+                <button type="button" onclick="approveRequest('${item.id}', false)" class="bg-red-600/80 hover:bg-red-500 text-white font-bold text-xs px-3 py-1.5 rounded-lg transition cursor-pointer">
                   ✕
                 </button>
               </div>
@@ -425,7 +472,7 @@ import '../../styles/global.css';
         const avatar = document.getElementById('profile-avatar')?.value || '👦';
 
         const state = getState();
-        if (!state.childProfile) state.childProfile = { blueTokens: 0 };
+        if (!state.childProfile) state.childProfile = { blueTokens: 0, redTokens: 0 };
         state.childProfile.name = name;
         state.childProfile.avatar = avatar;
 
@@ -442,7 +489,7 @@ import '../../styles/global.css';
 
         if (!title) return;
         const state = getState();
-        if (!state.childProfile) state.childProfile = { name: 'Ángel', avatar: '👦', blueTokens: 0 };
+        if (!state.childProfile) state.childProfile = { name: 'Ángel', avatar: '👦', blueTokens: 0, redTokens: 0 };
         
         state.childProfile.blueTokens = (state.childProfile.blueTokens || 0) + tokens;
 
@@ -450,6 +497,7 @@ import '../../styles/global.css';
         alert(`¡Super-Logro otorgado! Se han sumado +${tokens} 🔵 a ${state.childProfile.name}.`);
         e.target.reset();
         document.getElementById('logro-emoji').value = '⭐';
+        renderDashboard();
       });
 
       // Guardar Misión
@@ -485,6 +533,34 @@ import '../../styles/global.css';
       });
     });
 
+    // Funciones globales de administración de fichas y datos
+    window.adjustTokens = function(type, amount) {
+      const state = getState();
+      if (!state.childProfile) state.childProfile = { blueTokens: 0, redTokens: 0 };
+
+      if (type === 'blue') {
+        const current = state.childProfile.blueTokens ?? 0;
+        state.childProfile.blueTokens = Math.max(0, current + amount);
+      } else if (type === 'red') {
+        const current = state.childProfile.redTokens ?? 0;
+        state.childProfile.redTokens = Math.max(0, current + amount);
+      }
+
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      renderDashboard();
+    };
+
+    window.resetRedTokens = function() {
+      if (!confirm('¿Deseas reiniciar las fichas rojas de Ángel a 0?')) return;
+      
+      const state = getState();
+      if (!state.childProfile) state.childProfile = { blueTokens: 0, redTokens: 0 };
+      state.childProfile.redTokens = 0;
+
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      renderDashboard();
+    };
+
     window.deleteMission = function(id) {
       const state = getState();
       state.missions = state.missions.filter(m => m.id !== id);
@@ -504,12 +580,12 @@ import '../../styles/global.css';
       const req = (state.pendingApprovals || []).find(r => r.id === id);
 
       if (req && approved) {
-        if (!state.childProfile) state.childProfile = { name: 'Ángel', avatar: '👦', blueTokens: 0 };
+        if (!state.childProfile) state.childProfile = { name: 'Ángel', avatar: '👦', blueTokens: 0, redTokens: 0 };
         if (req.type === 'MISSION') {
           state.childProfile.blueTokens = (state.childProfile.blueTokens || 0) + req.tokens;
         }
       } else if (req && !approved && req.type === 'REWARD') {
-        if (!state.childProfile) state.childProfile = { name: 'Ángel', avatar: '👦', blueTokens: 0 };
+        if (!state.childProfile) state.childProfile = { name: 'Ángel', avatar: '👦', blueTokens: 0, redTokens: 0 };
         state.childProfile.blueTokens = (state.childProfile.blueTokens || 0) + req.tokens;
       }
 
@@ -517,12 +593,14 @@ import '../../styles/global.css';
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
       renderDashboard();
     };
+
     // Copiar código familiar
     window.copyFamilyCode = function() {
       const codeInput = document.getElementById('family-code-input');
       navigator.clipboard.writeText(codeInput.value);
       alert('¡Código de familia copiado al portapapeles!');
     };
+
     // Vincular mediante código familiar básico
     window.linkFamilyDevice = function() {
       const input = document.getElementById('join-code-input');
@@ -533,25 +611,23 @@ import '../../styles/global.css';
         return;
       }
 
-      const saved = localStorage.getItem('family_app_state_v1');
-      const state = saved ? JSON.parse(saved) : {};
-      
+      const state = getState();
       state.familyCode = code;
-      localStorage.setItem('family_app_state_v1', JSON.stringify(state));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 
       alert(`¡Dispositivo vinculado correctamente con el código ${code}! 🎉`);
       location.reload();
     };
 
-    // Exportar los datos actuales en texto para pasarlos por WhatsApp al otro papá/mamá
+    // Exportar los datos actuales en texto para pasarlos por WhatsApp
     window.exportFamilyData = function() {
-      const saved = localStorage.getItem('family_app_state_v1');
+      const saved = localStorage.getItem(STORAGE_KEY);
       if (!saved) {
         alert('No hay datos guardados aún.');
         return;
       }
       navigator.clipboard.writeText(saved);
-      alert('¡Datos de la familia copiados al portapapeles! Pégaselos en un mensaje de WhatsApp al otro dispositivo para que tenga la misma información.');
+      alert('¡Datos de la familia copiados al portapapeles! Pégaselos en un mensaje de WhatsApp al otro dispositivo para sincronizar.');
     };
 
     // Importar los datos desde otro dispositivo
@@ -560,9 +636,8 @@ import '../../styles/global.css';
       if (!jsonString) return;
 
       try {
-        // Validar que sea un JSON válido
         JSON.parse(jsonString);
-        localStorage.setItem('family_app_state_v1', jsonString);
+        localStorage.setItem(STORAGE_KEY, jsonString);
         alert('¡Datos sincronizados con éxito! La app se actualizará.');
         location.reload();
       } catch (e) {
@@ -579,11 +654,10 @@ import '../../styles/global.css';
       }
       const reader = new FileReader();
       reader.onload = function(e) {
-        const saved = localStorage.getItem('family_app_state_v1');
-        const state = saved ? JSON.parse(saved) : {};
-        if (!state.childProfile) state.childProfile = {};
+        const state = getState();
+        if (!state.childProfile) state.childProfile = { blueTokens: 0, redTokens: 0 };
         state.childProfile.customBgImage = e.target.result;
-        localStorage.setItem('family_app_state_v1', JSON.stringify(state));
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
         alert('¡Fondo de pantalla guardado con éxito!');
       };
       reader.readAsDataURL(fileInput.files[0]);
@@ -598,11 +672,10 @@ import '../../styles/global.css';
       }
       const reader = new FileReader();
       reader.onload = function(e) {
-        const saved = localStorage.getItem('family_app_state_v1');
-        const state = saved ? JSON.parse(saved) : {};
-        if (!state.childProfile) state.childProfile = {};
+        const state = getState();
+        if (!state.childProfile) state.childProfile = { blueTokens: 0, redTokens: 0 };
         state.childProfile.customAvatarImage = e.target.result;
-        localStorage.setItem('family_app_state_v1', JSON.stringify(state));
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
         alert('¡Avatar de héroe guardado con éxito!');
       };
       reader.readAsDataURL(fileInput.files[0]);
