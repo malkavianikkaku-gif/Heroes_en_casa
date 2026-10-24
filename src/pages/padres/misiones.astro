@@ -1,0 +1,140 @@
+---
+// src/pages/padres/misiones.astro
+import '../../styles/global.css';
+---
+
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Misiones - Centro de Padres</title>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen pb-24 font-sans">
+
+  <!-- Header con Regreso -->
+  <header class="bg-slate-800 border-b border-slate-700 p-4 sticky top-0 z-30">
+    <div class="max-w-md mx-auto flex justify-between items-center">
+      <div class="flex items-center gap-2">
+        <a href="/padres/dashboard" class="text-slate-400 hover:text-white transition font-bold text-sm flex items-center gap-1">
+          ← Volver
+        </a>
+      </div>
+      <h1 class="font-black text-white text-base">🎯 Administrar Misiones</h1>
+    </div>
+  </header>
+
+  <main class="max-w-md mx-auto p-4 space-y-5">
+
+    <!-- Formulario para Agregar Nueva Misión -->
+    <section class="bg-slate-800/90 p-4 rounded-3xl border border-slate-700 space-y-3">
+      <h2 class="text-xs font-bold text-blue-400 uppercase tracking-wider">➕ Agregar Nueva Misión</h2>
+      
+      <form id="add-mission-form" class="space-y-3">
+        <div class="grid grid-cols-4 gap-2">
+          <div class="col-span-1">
+            <label class="block text-[10px] font-bold text-slate-400 mb-1">Emoji</label>
+            <input type="text" id="mission-emoji" placeholder="🧩" maxlength="2" required class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-2 text-center text-base text-white outline-none focus:ring-2 focus:ring-blue-500" />
+          </div>
+          <div class="col-span-3">
+            <label class="block text-[10px] font-bold text-slate-400 mb-1">Título de la Misión</label>
+            <input type="text" id="mission-title" placeholder="Ej. Ejercicio de Lectura" required class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-xs text-white outline-none focus:ring-2 focus:ring-blue-500" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-[10px] font-bold text-slate-400 mb-1">Categoría</label>
+            <select id="mission-category" class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-2 text-xs text-white outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="Higiene">Higiene y Salud</option>
+              <option value="Rutina">Rutina en Casa</option>
+              <option value="Estudio">Estudio y Aprendizaje</option>
+              <option value="Terapia">Terapia / Sensorial</option>
+              <option value="Conducta">Conducta y Autonomía</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold text-slate-400 mb-1">Recompensa (🔵)</label>
+            <input type="number" id="mission-tokens" min="1" max="100" value="10" required class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-xs text-white outline-none focus:ring-2 focus:ring-blue-500" />
+          </div>
+        </div>
+
+        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 rounded-xl text-xs shadow transition cursor-pointer">
+          Guardar Misión
+        </button>
+      </form>
+    </section>
+
+    <!-- Lista de Misiones Activas -->
+    <section class="space-y-2">
+      <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider">📋 Misiones Activas</h2>
+      <div id="missions-list" class="space-y-2"></div>
+    </section>
+
+  </main>
+
+  <script>
+    // @ts-nocheck
+    const STORAGE_KEY = 'family_app_state_v1';
+
+    function getState() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      return saved ? JSON.parse(saved) : { missions: [] };
+    }
+
+    function renderMissions() {
+      const state = getState();
+      const container = document.getElementById('missions-list');
+      if (!container) return;
+
+      const missions = state.missions || [];
+      if (missions.length === 0) {
+        container.innerHTML = `<p class="text-xs text-slate-500 text-center py-4 bg-slate-800/40 rounded-2xl border border-slate-800">No hay misiones registradas aún.</p>`;
+        return;
+      }
+
+      container.innerHTML = missions.map(m => `
+        <div class="bg-slate-800 p-3.5 rounded-2xl border border-slate-700 flex items-center justify-between gap-2">
+          <div class="flex items-center gap-3">
+            <span class="text-2xl">${m.emoji || '🎯'}</span>
+            <div>
+              <h4 class="font-bold text-xs text-white">${m.title}</h4>
+              <span class="text-[10px] text-blue-400 font-semibold">${m.category} • +${m.tokens} 🔵</span>
+            </div>
+          </div>
+          <button type="button" onclick="deleteMission('${m.id}')" class="text-slate-500 hover:text-red-400 p-1.5 text-xs font-bold transition cursor-pointer">
+            🗑️
+          </button>
+        </div>
+      `).join('');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderMissions();
+
+      document.getElementById('add-mission-form')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const emoji = document.getElementById('mission-emoji')?.value || '🎯';
+        const title = document.getElementById('mission-title')?.value;
+        const category = document.getElementById('mission-category')?.value;
+        const tokens = parseInt(document.getElementById('mission-tokens')?.value || '10', 10);
+
+        if (!title) return;
+        const state = getState();
+        if (!state.missions) state.missions = [];
+        state.missions.push({ id: `m_${Date.now()}`, emoji, title, category, tokens });
+        
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        renderMissions();
+        e.target.reset();
+      });
+    });
+
+    window.deleteMission = function(id) {
+      const state = getState();
+      state.missions = (state.missions || []).filter(m => m.id !== id);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      renderMissions();
+    };
+  </script>
+</body>
+</html>

@@ -1,5 +1,5 @@
 ---
-// src/pages/padres/dashboard.astro
+// src/pages/padres/index.astro
 import '../../styles/global.css';
 ---
 
@@ -11,7 +11,7 @@ import '../../styles/global.css';
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen pb-24 font-sans">
 
-  <!-- Header con Salida Segura -->
+  <!-- Header LimPIO con Campanita de Notificaciones y Salida Segura -->
   <header class="bg-slate-800 border-b border-slate-700 p-4 sticky top-0 z-30">
     <div class="max-w-md mx-auto flex justify-between items-center">
       <div class="flex items-center gap-2">
@@ -19,215 +19,83 @@ import '../../styles/global.css';
         <h1 class="font-black text-white text-base">Centro de Padres</h1>
       </div>
 
-      <a 
-        href="/" 
-        class="bg-slate-700 hover:bg-slate-600 active:scale-95 text-slate-200 text-xs font-bold py-2 px-3.5 rounded-xl border border-slate-600 shadow transition flex items-center gap-1.5 cursor-pointer"
-      >
-        <span>🔒</span>
-        <span>Salir</span>
-      </a>
+      <div class="flex items-center gap-2">
+        <!-- 🔔 Campanita de Notificaciones con Contador Pendiente -->
+        <a href="#pending-section" class="relative bg-slate-700 hover:bg-slate-600 p-2 rounded-xl border border-slate-600 transition flex items-center justify-center cursor-pointer">
+          <span class="text-base">🔔</span>
+          <span id="bell-badge" class="absolute -top-1 -right-1 bg-red-500 text-white font-bold text-[10px] w-4 h-4 rounded-full flex items-center justify-center shadow">0</span>
+        </a>
+
+        <a href="/" class="bg-slate-700 hover:bg-slate-600 active:scale-95 text-slate-200 text-xs font-bold py-2 px-3 rounded-xl border border-slate-600 shadow transition flex items-center gap-1 cursor-pointer">
+          <span>🔒</span>
+          <span>Salir</span>
+        </a>
+      </div>
     </div>
   </header>
 
-  <main class="max-w-md mx-auto p-4 space-y-6">
+  <main class="max-w-md mx-auto p-4 space-y-5">
 
-    <!-- SECCIÓN: Configurar Perfil del Héroe -->
-    <section class="bg-slate-800 p-4 rounded-2xl border border-slate-700 space-y-3">
-      <div class="flex items-center gap-2">
-        <span class="text-xl">🦸‍♂️</span>
-        <div>
-          <h2 class="text-xs font-bold text-white uppercase tracking-wider">Perfil del Héroe</h2>
-          <p class="text-[11px] text-slate-400">Personaliza el nombre y avatar de tu hijo.</p>
-        </div>
-      </div>
-
-      <form id="profile-form" class="space-y-3">
-        <div class="grid grid-cols-4 gap-2">
-          <div class="col-span-1">
-            <label class="block text-[10px] font-bold text-slate-400 mb-1">Avatar</label>
-            <input type="text" id="profile-avatar" placeholder="👦" maxlength="2" class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-1 text-center text-base text-white outline-none focus:ring-2 focus:ring-blue-500" />
-          </div>
-          <div class="col-span-3">
-            <label class="block text-[10px] font-bold text-slate-400 mb-1">Nombre del Héroe</label>
-            <input type="text" id="profile-name" placeholder="Ángel" required class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-xs text-white outline-none focus:ring-2 focus:ring-blue-500" />
-          </div>
-        </div>
-        <button type="submit" class="w-full bg-slate-700 hover:bg-slate-600 active:scale-98 text-white font-bold py-2 rounded-xl text-xs transition cursor-pointer">
-          Actualizar Perfil
-        </button>
-      </form>
-    </section>
-
-    <!-- SECCIÓN: Control Directo de Fichas (Azules y Rojas) -->
-    <section class="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-sm space-y-4">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center text-xl text-red-600 font-bold border border-red-100">
-          ⚖️
-        </div>
-        <div>
-          <h3 class="font-bold text-slate-900 text-sm">Control Directo de Fichas</h3>
-          <p class="text-xs text-slate-400">Ajusta el saldo de Fichas Azules 🔵 y Rojas 🔴</p>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-2 gap-3 pt-2">
-        <!-- Panel Fichas Azules -->
-        <div class="bg-blue-50/60 border border-blue-100 p-3.5 rounded-2xl text-center space-y-2">
-          <span class="text-xs font-bold text-blue-700 block">Fichas Azules 🔵</span>
-          <div id="parent-blue-count" class="text-2xl font-black text-blue-900">0</div>
-          <div class="flex justify-center gap-1.5 pt-1">
-            <button type="button" onclick="adjustTokens('blue', -1)" class="bg-white hover:bg-blue-100 text-blue-700 font-bold border border-blue-200 w-8 h-8 rounded-xl text-sm shadow-sm transition active:scale-95 cursor-pointer">-1</button>
-            <button type="button" onclick="adjustTokens('blue', 1)" class="bg-blue-600 hover:bg-blue-700 text-white font-bold w-8 h-8 rounded-xl text-sm shadow-sm transition active:scale-95 cursor-pointer">+1</button>
-            <button type="button" onclick="adjustTokens('blue', 5)" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-2 h-8 rounded-xl text-xs shadow-sm transition active:scale-95 cursor-pointer">+5</button>
-          </div>
-        </div>
-
-        <!-- Panel Fichas Rojas -->
-        <div class="bg-red-50/60 border border-red-100 p-3.5 rounded-2xl text-center space-y-2">
-          <span class="text-xs font-bold text-red-700 block">Fichas Rojas 🔴</span>
-          <div id="parent-red-count" class="text-2xl font-black text-red-900">0</div>
-          <div class="flex justify-center gap-1.5 pt-1">
-            <button type="button" onclick="adjustTokens('red', -1)" class="bg-white hover:bg-red-100 text-red-700 font-bold border border-red-200 w-8 h-8 rounded-xl text-sm shadow-sm transition active:scale-95 cursor-pointer">-1</button>
-            <button type="button" onclick="adjustTokens('red', 1)" class="bg-red-600 hover:bg-red-700 text-white font-bold w-8 h-8 rounded-xl text-sm shadow-sm transition active:scale-95 cursor-pointer">+1</button>
-            <button type="button" onclick="resetRedTokens()" class="bg-slate-800 hover:bg-slate-900 text-white font-bold px-2 h-8 rounded-xl text-[10px] shadow-sm transition active:scale-95 cursor-pointer">Limpiar</button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- SECCIÓN: Código para Unirse a la Familia -->
-    <section class="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-sm space-y-4">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-xl text-blue-600 font-bold border border-blue-100">
-          🔗
-        </div>
-        <div>
-          <h3 class="font-bold text-slate-900 text-sm">Unirse a la Familia</h3>
-          <p class="text-xs text-slate-400">Código de sincronización multidispositivo</p>
-        </div>
-      </div>
-
-      <div class="space-y-2">
-        <label class="block text-xs font-bold text-slate-700">Código de Acceso Familiar</label>
-        <div class="flex items-center gap-2">
-          <input type="text" id="family-code-input" readonly value="HEROES-ANGEL-2026" class="w-full bg-slate-100 border border-slate-300 rounded-xl px-3 py-2 text-xs font-mono font-bold text-slate-700 outline-none" />
-          <button type="button" onclick="copyFamilyCode()" class="bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs px-4 py-2 rounded-xl transition shrink-0 cursor-pointer">
-            Copiar
-          </button>
-        </div>
-        <p class="text-[11px] text-slate-400">Usa este código en otro celular o tablet para cargar el mismo progreso de Ángel.</p>
-      </div>
-    </section>
-
-    <!-- SECCIÓN: Vincular este dispositivo con el Código Familiar -->
-    <section class="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-sm space-y-4">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-xl text-emerald-600 font-bold border border-emerald-100">
-          🤝
-        </div>
-        <div>
-          <h3 class="font-bold text-slate-900 text-sm">Vincular Otro Dispositivo</h3>
-          <p class="text-xs text-slate-400">Conecta este teléfono al perfil de Ángel</p>
-        </div>
-      </div>
-
-      <div class="space-y-3">
-        <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">Introduce el Código Familiar</label>
-          <div class="flex items-center gap-2">
-            <input type="text" id="join-code-input" placeholder="Ej. HEROES-ANGEL-2026" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-mono font-bold text-slate-700 outline-none focus:ring-2 focus:ring-purple-500" />
-            <button type="button" onclick="linkFamilyDevice()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-2 rounded-xl transition shrink-0 cursor-pointer">
-              Vincular
-            </button>
-          </div>
-        </div>
-
-        <!-- Sincronización rápida por texto/WhatsApp -->
-        <div class="pt-2 border-t border-slate-100 space-y-2">
-          <label class="block text-xs font-bold text-slate-700">🔄 Sincronización exacta de Fichas y Misiones</label>
-          <p class="text-[11px] text-slate-400">Para pasarle los datos actuales (fichas y misiones) al otro celular, exporta o importa el código de datos:</p>
-          
-          <div class="flex gap-2">
-            <button type="button" onclick="exportFamilyData()" class="w-1/2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs py-2 rounded-xl transition cursor-pointer">
-              📤 Copiar Datos
-            </button>
-            <button type="button" onclick="importFamilyData()" class="w-1/2 bg-purple-50 hover:bg-purple-100 text-purple-700 font-bold text-xs py-2 rounded-xl transition cursor-pointer">
-              📥 Cargar Datos
-            </button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- SECCIÓN: Personalización Visual Avanzada (Fondo y Avatar) -->
-    <section class="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-sm space-y-6">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center text-xl text-purple-600 font-bold border border-purple-100">
-          🎨
-        </div>
-        <div>
-          <h3 class="font-bold text-slate-900 text-sm">Personalización de Ángel</h3>
-          <p class="text-xs text-slate-400">Sube imágenes para su fondo y su avatar</p>
-        </div>
-      </div>
-
-      <!-- 1. Fondo Personalizado -->
-      <div class="space-y-2 border-b border-slate-100 pb-4">
-        <label class="block text-xs font-bold text-slate-700">🖼️ Fondo de Pantalla Personalizado</label>
-        <input type="file" id="custom-bg-input" accept="image/*" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100 cursor-pointer border border-slate-200 rounded-xl p-1" />
-        <button type="button" onclick="saveCustomBg()" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs py-2 rounded-xl shadow transition cursor-pointer">
-          Guardar Fondo de Pantalla
-        </button>
-      </div>
-
-      <!-- 2. Avatar Personalizado -->
-      <div class="space-y-2">
-        <label class="block text-xs font-bold text-slate-700">🦸‍♂️ Avatar de Héroe Personalizado (Foto o Dibujo)</label>
-        <input type="file" id="custom-avatar-input" accept="image/*" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer border border-slate-200 rounded-xl p-1" />
-        <button type="button" onclick="saveCustomAvatar()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs py-2 rounded-xl shadow transition cursor-pointer">
-          Guardar Avatar de Héroe
-        </button>
-      </div>
-    </section>
-
-    <!-- SECCIÓN 0: Registrar Super-Logro Rápido -->
-    <section class="bg-gradient-to-r from-blue-900/60 to-indigo-900/60 p-4 rounded-2xl border border-blue-500/30 space-y-3 shadow-lg">
+    <!-- 💡 TARJETA DE BALANCE INTELIGENTE (Resumen de Comportamiento) -->
+    <section class="bg-gradient-to-br from-slate-800 to-slate-800/90 p-4 rounded-3xl border border-slate-700 shadow-sm space-y-3">
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-2">
-          <span class="text-2xl">🌟</span>
+          <span class="text-2xl">📊</span>
           <div>
-            <h2 class="text-xs font-black text-blue-200 uppercase tracking-wider">Otorgar Super-Logro</h2>
-            <p class="text-[11px] text-slate-300">Premia conductas o esfuerzos extraordinarios al instante.</p>
+            <h2 class="text-xs font-bold text-white uppercase tracking-wider">Balance Familiar</h2>
+            <p id="behavior-summary-text" class="text-[11px] text-slate-400">Calculando estado actual...</p>
           </div>
         </div>
       </div>
-
-      <form id="super-logro-form" class="space-y-2.5">
-        <div class="grid grid-cols-4 gap-2">
-          <div class="col-span-1">
-            <input type="text" id="logro-emoji" placeholder="⭐" maxlength="2" value="⭐" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl py-2 px-1 text-center text-base text-white outline-none focus:ring-2 focus:ring-amber-400" />
-          </div>
-          <div class="col-span-3">
-            <input type="text" id="logro-title" placeholder="Ej. ¡Mantuvo la calma y ayudó en casa!" required class="w-full bg-slate-900/90 border border-slate-700 rounded-xl py-2 px-3 text-xs text-white outline-none focus:ring-2 focus:ring-amber-400" />
-          </div>
+      <div class="grid grid-cols-2 gap-2 pt-1">
+        <div class="bg-blue-950/40 border border-blue-500/20 p-2.5 rounded-2xl flex items-center justify-between">
+          <span class="text-xs text-blue-300 font-bold">Fichas Azules 🔵</span>
+          <span id="summary-blue" class="font-black text-blue-200 text-base">0</span>
         </div>
+        <div class="bg-red-950/40 border border-red-500/20 p-2.5 rounded-2xl flex items-center justify-between">
+          <span class="text-xs text-red-300 font-bold">Fichas Rojas 🔴</span>
+          <span id="summary-red" class="font-black text-red-200 text-base">0</span>
+        </div>
+      </div>
+    </section>
 
+    <!-- ⚡ TARJETA DE ACCIÓN RÁPIDA: Super-Logros y Fichas con Motivo -->
+    <section class="bg-slate-800 p-4 rounded-3xl border border-slate-700 shadow-sm space-y-4">
+      <div class="flex items-center gap-2">
+        <span class="text-xl">🌟</span>
+        <div>
+          <h2 class="text-xs font-bold text-white uppercase tracking-wider">Acciones Inmediatas</h2>
+          <p class="text-[11px] text-slate-400">Otorga super-logros o registra ajustes de conducta.</p>
+        </div>
+      </div>
+
+      <!-- Super Logro Rápido -->
+      <form id="super-logro-form" class="space-y-2 bg-slate-900/60 p-3 rounded-2xl border border-slate-700/60">
+        <span class="text-[10px] font-bold text-amber-400 uppercase">🚀 Otorgar Super-Logro (🔵)</span>
         <div class="flex gap-2">
-          <div class="w-1/3">
-            <input type="number" id="logro-tokens" min="1" max="100" value="15" required class="w-full bg-slate-900/90 border border-slate-700 rounded-xl py-2 px-2 text-center text-xs font-bold text-blue-300 outline-none focus:ring-2 focus:ring-amber-400" />
-          </div>
-          <button type="submit" class="w-2/3 bg-amber-500 hover:bg-amber-400 active:scale-95 text-slate-950 font-black py-2 rounded-xl text-xs shadow-md transition cursor-pointer flex items-center justify-center gap-1">
-            <span>🚀 Otorgar Fichas</span>
-          </button>
+          <input type="text" id="logro-title" placeholder="Ej. ¡Ayudó sin que se lo pidieran!" required class="w-full bg-slate-900 border border-slate-700 rounded-xl py-1.5 px-3 text-xs text-white outline-none focus:ring-2 focus:ring-amber-400" />
+          <input type="number" id="logro-tokens" value="15" min="1" max="100" class="w-16 bg-slate-900 border border-slate-700 rounded-xl py-1.5 px-2 text-center text-xs font-bold text-blue-300 outline-none" />
         </div>
+        <button type="submit" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-black py-1.5 rounded-xl text-xs transition cursor-pointer">
+          Otorgar Fichas Azules
+        </button>
+      </form>
+
+      <!-- Ficha Roja con Motivo Obligatorio -->
+      <form id="red-token-form" class="space-y-2 bg-slate-900/60 p-3 rounded-2xl border border-slate-700/60">
+        <span class="text-[10px] font-bold text-red-400 uppercase">🔴 Registrar Ficha Roja (Con Motivo)</span>
+        <input type="text" id="red-reason" placeholder="Motivo (ej. No quiso ordenar su cuarto)" required class="w-full bg-slate-900 border border-slate-700 rounded-xl py-1.5 px-3 text-xs text-white outline-none focus:ring-2 focus:ring-red-400" />
+        <button type="submit" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-1.5 rounded-xl text-xs transition cursor-pointer">
+          Añadir 1 Ficha Roja y Guardar Motivo
+        </button>
       </form>
     </section>
 
-    <!-- SECCIÓN 1: Aprobaciones Pendientes -->
-    <section class="space-y-3">
+    <!-- ⏳ SECCIÓN DE APROBACIONES PENDIENTES (Campanita / Inmediato) -->
+    <section id="pending-section" class="space-y-3">
       <div class="flex justify-between items-center">
         <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider">⏳ Solicitudes Pendientes</h2>
-        <span id="pending-count" class="text-xs font-bold bg-amber-500/20 text-amber-300 px-2.5 py-0.5 rounded-full border border-amber-500/30">0</span>
+        <span id="pending-badge-count" class="text-xs font-bold bg-amber-500/20 text-amber-300 px-2.5 py-0.5 rounded-full border border-amber-500/30">0</span>
       </div>
 
       <div id="pending-container" class="space-y-2">
@@ -237,201 +105,101 @@ import '../../styles/global.css';
       </div>
     </section>
 
-    <!-- SECCIÓN 2: Administrador Dinámico de Misiones -->
-    <section class="space-y-4 pt-4 border-t border-slate-800">
-      <div class="flex justify-between items-center">
-        <div>
-          <h2 class="text-sm font-bold text-white flex items-center gap-2">
-            <span>🎯</span> Administrar Misiones Diarias
-          </h2>
-          <p class="text-xs text-slate-400">Crea o adapta misiones según las necesidades de tu hijo.</p>
-        </div>
-      </div>
-
-      <form id="add-mission-form" class="bg-slate-800/90 p-4 rounded-2xl border border-slate-700 space-y-3">
-        <h3 class="text-xs font-bold text-blue-400 uppercase tracking-wider">➕ Agregar Nueva Misión</h3>
-        
-        <div class="grid grid-cols-4 gap-2">
-          <div class="col-span-1">
-            <label class="block text-[10px] font-bold text-slate-400 mb-1">Emoji</label>
-            <input type="text" id="mission-emoji" placeholder="🧩" maxlength="2" required class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-2 text-center text-base text-white outline-none focus:ring-2 focus:ring-blue-500" />
-          </div>
-          <div class="col-span-3">
-            <label class="block text-[10px] font-bold text-slate-400 mb-1">Título de la Misión</label>
-            <input type="text" id="mission-title" placeholder="Ej. Ejercicio de Terapia / Lectura" required class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-xs text-white outline-none focus:ring-2 focus:ring-blue-500" />
-          </div>
-        </div>
-
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label class="block text-[10px] font-bold text-slate-400 mb-1">Categoría</label>
-            <select id="mission-category" class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-2 text-xs text-white outline-none focus:ring-2 focus:ring-blue-500">
-              <option value="Higiene">Higiene y Salud</option>
-              <option value="Rutina">Rutina en Casa</option>
-              <option value="Estudio">Estudio y Aprendizaje</option>
-              <option value="Terapia">Terapia / Sensorial</option>
-              <option value="Conducta">Conducta y Autonomía</option>
-            </select>
+    <!-- 🗺️ GRID DE TARJETAS DE NAVEGACIÓN A SUBPÁGINAS -->
+    <section class="space-y-3 pt-2">
+      <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider">📂 Secciones del Sistema</h2>
+      
+      <div class="grid grid-cols-2 gap-3">
+        <!-- Misiones -->
+        <a href="/padres/misiones" class="bg-slate-800 hover:bg-slate-750 p-4 rounded-2xl border border-slate-700 shadow-sm transition flex flex-col justify-between gap-3 group cursor-pointer">
+          <div class="w-9 h-9 rounded-xl bg-blue-500/10 flex items-center justify-center text-lg text-blue-400 border border-blue-500/20 group-hover:scale-105 transition">
+            🎯
           </div>
           <div>
-            <label class="block text-[10px] font-bold text-slate-400 mb-1">Recompensa (🔵)</label>
-            <input type="number" id="mission-tokens" min="1" max="100" value="10" required class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-xs text-white outline-none focus:ring-2 focus:ring-blue-500" />
+            <h3 class="font-bold text-white text-xs">Misiones Diarias</h3>
+            <p class="text-[10px] text-slate-400 mt-0.5">Crear y adaptar tareas</p>
           </div>
-        </div>
+        </a>
 
-        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 active:scale-98 text-white font-bold py-2.5 rounded-xl text-xs shadow transition cursor-pointer">
-          Guardar Misión
-        </button>
-      </form>
-
-      <div class="space-y-2">
-        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">📋 Misiones Activas</h3>
-        <div id="missions-list" class="space-y-2"></div>
-      </div>
-    </section>
-
-    <!-- SECCIÓN 3: Administrador Dinámico de Premios / Tiendita -->
-    <section class="space-y-4 pt-4 border-t border-slate-800">
-      <div>
-        <h2 class="text-sm font-bold text-white flex items-center gap-2">
-          <span>🎁</span> Administrar Premios de la Tiendita
-        </h2>
-        <p class="text-xs text-slate-400">Personaliza los premios y su costo en fichas azules.</p>
-      </div>
-
-      <form id="add-reward-form" class="bg-slate-800/90 p-4 rounded-2xl border border-slate-700 space-y-3">
-        <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider">➕ Agregar Nuevo Premio</h3>
-        
-        <div class="grid grid-cols-4 gap-2">
-          <div class="col-span-1">
-            <label class="block text-[10px] font-bold text-slate-400 mb-1">Emoji</label>
-            <input type="text" id="reward-emoji" placeholder="🎨" maxlength="2" required class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-2 text-center text-base text-white outline-none focus:ring-2 focus:ring-amber-500" />
-          </div>
-          <div class="col-span-3">
-            <label class="block text-[10px] font-bold text-slate-400 mb-1">Nombre del Premio</label>
-            <input type="text" id="reward-title" placeholder="Ej. 30 min de Plastilina / Helado" required class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-xs text-white outline-none focus:ring-2 focus:ring-amber-500" />
-          </div>
-        </div>
-
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label class="block text-[10px] font-bold text-slate-400 mb-1">Descripción Corta</label>
-            <input type="text" id="reward-desc" placeholder="Ej. Tiempo de juego sensorial" class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-xs text-white outline-none focus:ring-2 focus:ring-amber-500" />
+        <!-- Tiendita -->
+        <a href="/padres/tienda" class="bg-slate-800 hover:bg-slate-750 p-4 rounded-2xl border border-slate-700 shadow-sm transition flex flex-col justify-between gap-3 group cursor-pointer">
+          <div class="w-9 h-9 rounded-xl bg-amber-500/10 flex items-center justify-center text-lg text-amber-400 border border-amber-500/20 group-hover:scale-105 transition">
+            🎁
           </div>
           <div>
-            <label class="block text-[10px] font-bold text-slate-400 mb-1">Costo (🔵)</label>
-            <input type="number" id="reward-cost" min="1" max="500" value="30" required class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-xs text-white outline-none focus:ring-2 focus:ring-amber-500" />
+            <h3 class="font-bold text-white text-xs">Premios / Tiendita</h3>
+            <p class="text-[10px] text-slate-400 mt-0.5">Catálogo y costos</p>
           </div>
-        </div>
+        </a>
 
-        <button type="submit" class="w-full bg-amber-600 hover:bg-amber-500 active:scale-98 text-white font-bold py-2.5 rounded-xl text-xs shadow transition cursor-pointer">
-          Guardar Premio
-        </button>
-      </form>
+        <!-- Historial / Fichas Rojas -->
+        <a href="/padres/historial" class="bg-slate-800 hover:bg-slate-750 p-4 rounded-2xl border border-slate-700 shadow-sm transition flex flex-col justify-between gap-3 group cursor-pointer">
+          <div class="w-9 h-9 rounded-xl bg-red-500/10 flex items-center justify-center text-lg text-red-400 border border-red-500/20 group-hover:scale-105 transition">
+            📜
+          </div>
+          <div>
+            <h3 class="font-bold text-white text-xs">Historial de Conducta</h3>
+            <p class="text-[10px] text-slate-400 mt-0.5">Bitácora de fichas rojas</p>
+          </div>
+        </a>
 
-      <div class="space-y-2">
-        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">🛍️ Catálogo de Premios</h3>
-        <div id="rewards-list" class="space-y-2"></div>
+        <!-- Configuración Familiar -->
+        <a href="/padres/configuracion" class="bg-slate-800 hover:bg-slate-750 p-4 rounded-2xl border border-slate-700 shadow-sm transition flex flex-col justify-between gap-3 group cursor-pointer">
+          <div class="w-9 h-9 rounded-xl bg-purple-500/10 flex items-center justify-center text-lg text-purple-400 border border-purple-500/20 group-hover:scale-105 transition">
+            ⚙️
+          </div>
+          <div>
+            <h3 class="font-bold text-white text-xs">Configuración</h3>
+            <p class="text-[10px] text-slate-400 mt-0.5">Perfil, avatar y códigos</p>
+          </div>
+        </a>
       </div>
     </section>
 
   </main>
 
+  <!-- Script del Dashboard Principal -->
   <script>
     // @ts-nocheck
     const STORAGE_KEY = 'family_app_state_v1';
-
-    const defaultMissions = [
-      { id: 'm1', emoji: '🦷', title: 'Lavarse los dientes', category: 'Higiene', tokens: 5 },
-      { id: 'm2', emoji: '🧸', title: 'Recoger juguetes y ordenar', category: 'Rutina', tokens: 10 },
-      { id: 'm3', emoji: '📚', title: 'Hacer la tarea escolar', category: 'Estudio', tokens: 15 }
-    ];
-
-    const defaultRewards = [
-      { id: 'r1', emoji: '🎮', title: '1 hora de videojuegos', desc: 'Tiempo libre en consola o PC', cost: 30 },
-      { id: 'r2', emoji: '🎬', title: 'Elegir película del fin de semana', desc: 'Elección de peli familiar', cost: 40 },
-      { id: 'r3', emoji: '🍦', title: 'Ir por un helado', desc: 'Helado del sabor favorito', cost: 50 }
-    ];
 
     function getState() {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (!saved) return { 
         childProfile: { name: 'Ángel', avatar: '👦', blueTokens: 0, redTokens: 0 },
-        missions: defaultMissions, 
-        rewards: defaultRewards, 
-        pendingApprovals: [] 
+        missions: [], rewards: [], pendingApprovals: [], redTokenHistory: [] 
       };
-      const state = JSON.parse(saved);
-      if (!state.childProfile) state.childProfile = { name: 'Ángel', avatar: '👦', blueTokens: 0, redTokens: 0 };
-      if (state.childProfile.blueTokens === undefined) state.childProfile.blueTokens = 0;
-      if (state.childProfile.redTokens === undefined) state.childProfile.redTokens = 0;
-      if (!state.missions || state.missions.length === 0) state.missions = defaultMissions;
-      if (!state.rewards || state.rewards.length === 0) state.rewards = defaultRewards;
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-      return state;
+      return JSON.parse(saved);
     }
 
-    function renderDashboard() {
+    function renderMainDashboard() {
       const state = getState();
+      const profile = state.childProfile || { blueTokens: 0, redTokens: 0 };
 
-      // Rellenar datos del formulario de perfil
-      const nameInput = document.getElementById('profile-name');
-      const avatarInput = document.getElementById('profile-avatar');
-      if (nameInput && state.childProfile) nameInput.value = state.childProfile.name || 'Ángel';
-      if (avatarInput && state.childProfile) avatarInput.value = state.childProfile.avatar || '👦';
+      // Contadores
+      const blueCount = profile.blueTokens ?? 0;
+      const redCount = profile.redTokens ?? 0;
 
-      // Actualizar contadores de fichas en el panel de padres
-      const blueEl = document.getElementById('parent-blue-count');
-      if (blueEl) blueEl.innerText = state.childProfile.blueTokens ?? 0;
+      document.getElementById('summary-blue').innerText = blueCount;
+      document.getElementById('summary-red').innerText = redCount;
 
-      const redEl = document.getElementById('parent-red-count');
-      if (redEl) redEl.innerText = state.childProfile.redTokens ?? 0;
-
-      // Render Misiones
-      const missionsContainer = document.getElementById('missions-list');
-      if (missionsContainer) {
-        missionsContainer.innerHTML = state.missions.map(m => `
-          <div class="bg-slate-800 p-3 rounded-xl border border-slate-700 flex items-center justify-between gap-2">
-            <div class="flex items-center gap-3">
-              <span class="text-2xl">${m.emoji || '🎯'}</span>
-              <div>
-                <h4 class="font-bold text-xs text-white">${m.title}</h4>
-                <span class="text-[10px] text-blue-400 font-semibold">${m.category} • +${m.tokens} 🔵</span>
-              </div>
-            </div>
-            <button type="button" onclick="deleteMission('${m.id}')" class="text-slate-500 hover:text-red-400 p-1 text-xs font-bold transition cursor-pointer">
-              🗑️
-            </button>
-          </div>
-        `).join('');
+      // Mensaje de Balance Inteligente
+      const summaryText = document.getElementById('behavior-summary-text');
+      if (blueCount >= redCount) {
+        summaryText.innerText = '¡Excelente progreso! Ángel va genial esta semana 🌟';
+        summaryText.className = 'text-[11px] text-emerald-400 font-medium';
+      } else {
+        summaryText.innerText = 'Área de atención: requiere refuerzo positivo 🛡️';
+        summaryText.className = 'text-[11px] text-red-400 font-medium';
       }
 
-      // Render Premios
-      const rewardsContainer = document.getElementById('rewards-list');
-      if (rewardsContainer) {
-        rewardsContainer.innerHTML = state.rewards.map(r => `
-          <div class="bg-slate-800 p-3 rounded-xl border border-slate-700 flex items-center justify-between gap-2">
-            <div class="flex items-center gap-3">
-              <span class="text-2xl">${r.emoji || '🎁'}</span>
-              <div>
-                <h4 class="font-bold text-xs text-white">${r.title}</h4>
-                <span class="text-[10px] text-amber-400 font-semibold">${r.cost} 🔵 ${r.desc ? '• ' + r.desc : ''}</span>
-              </div>
-            </div>
-            <button type="button" onclick="deleteReward('${r.id}')" class="text-slate-500 hover:text-red-400 p-1 text-xs font-bold transition cursor-pointer">
-              🗑️
-            </button>
-          </div>
-        `).join('');
-      }
+      // Campanita de Notificaciones
+      const pending = state.pendingApprovals || [];
+      document.getElementById('bell-badge').innerText = pending.length;
+      document.getElementById('pending-badge-count').innerText = pending.length;
 
       // Render Aprobaciones Pendientes
       const pendingContainer = document.getElementById('pending-container');
-      const pendingCount = document.getElementById('pending-count');
-      const pending = state.pendingApprovals || [];
-
-      if (pendingCount) pendingCount.innerText = pending.length;
-
       if (pendingContainer) {
         if (pending.length === 0) {
           pendingContainer.innerHTML = `
@@ -449,12 +217,8 @@ import '../../styles/global.css';
                 <p class="text-[10px] text-slate-400">${item.tokens} 🔵</p>
               </div>
               <div class="flex gap-1.5 shrink-0">
-                <button type="button" onclick="approveRequest('${item.id}', true)" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-3 py-1.5 rounded-lg transition cursor-pointer">
-                  ✓
-                </button>
-                <button type="button" onclick="approveRequest('${item.id}', false)" class="bg-red-600/80 hover:bg-red-500 text-white font-bold text-xs px-3 py-1.5 rounded-lg transition cursor-pointer">
-                  ✕
-                </button>
+                <button type="button" onclick="approveRequest('${item.id}', true)" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-3 py-1.5 rounded-lg transition cursor-pointer">✓</button>
+                <button type="button" onclick="approveRequest('${item.id}', false)" class="bg-red-600/80 hover:bg-red-500 text-white font-bold text-xs px-3 py-1.5 rounded-lg transition cursor-pointer">✕</button>
               </div>
             </div>
           `).join('');
@@ -463,222 +227,62 @@ import '../../styles/global.css';
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-      renderDashboard();
-
-      // Guardar Perfil
-      document.getElementById('profile-form')?.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const name = document.getElementById('profile-name')?.value || 'Ángel';
-        const avatar = document.getElementById('profile-avatar')?.value || '👦';
-
-        const state = getState();
-        if (!state.childProfile) state.childProfile = { blueTokens: 0, redTokens: 0 };
-        state.childProfile.name = name;
-        state.childProfile.avatar = avatar;
-
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-        alert(`¡Perfil actualizado! Ahora el héroe es ${name}.`);
-      });
+      renderMainDashboard();
 
       // Guardar Super-Logro
       document.getElementById('super-logro-form')?.addEventListener('submit', (e) => {
         e.preventDefault();
-        const emoji = document.getElementById('logro-emoji')?.value || '⭐';
         const title = document.getElementById('logro-title')?.value;
         const tokens = parseInt(document.getElementById('logro-tokens')?.value || '15', 10);
-
         if (!title) return;
+
         const state = getState();
-        if (!state.childProfile) state.childProfile = { name: 'Ángel', avatar: '👦', blueTokens: 0, redTokens: 0 };
-        
         state.childProfile.blueTokens = (state.childProfile.blueTokens || 0) + tokens;
-
         localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-        alert(`¡Super-Logro otorgado! Se han sumado +${tokens} 🔵 a ${state.childProfile.name}.`);
+        
+        alert(`¡Super-Logro otorgado! +${tokens} 🔵 sumados a ${state.childProfile.name}.`);
         e.target.reset();
-        document.getElementById('logro-emoji').value = '⭐';
-        renderDashboard();
+        renderMainDashboard();
       });
 
-      // Guardar Misión
-      document.getElementById('add-mission-form')?.addEventListener('submit', (e) => {
+      // Guardar Ficha Roja con Motivo
+      document.getElementById('red-token-form')?.addEventListener('submit', (e) => {
         e.preventDefault();
-        const emoji = document.getElementById('mission-emoji')?.value || '🎯';
-        const title = document.getElementById('mission-title')?.value;
-        const category = document.getElementById('mission-category')?.value;
-        const tokens = parseInt(document.getElementById('mission-tokens')?.value || '10', 10);
+        const reason = document.getElementById('red-reason')?.value.trim();
+        if (!reason) return;
 
-        if (!title) return;
         const state = getState();
-        state.missions.push({ id: `m_${Date.now()}`, emoji, title, category, tokens });
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-        renderDashboard();
-        e.target.reset();
-      });
+        state.childProfile.redTokens = (state.childProfile.redTokens || 0) + 1;
+        
+        if (!state.redTokenHistory) state.redTokenHistory = [];
+        state.redTokenHistory.push({
+          id: `red_${Date.now()}`,
+          date: new Date().toLocaleString(),
+          reason: reason
+        });
 
-      // Guardar Premio
-      document.getElementById('add-reward-form')?.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const emoji = document.getElementById('reward-emoji')?.value || '🎁';
-        const title = document.getElementById('reward-title')?.value;
-        const desc = document.getElementById('reward-desc')?.value || '';
-        const cost = parseInt(document.getElementById('reward-cost')?.value || '30', 10);
-
-        if (!title) return;
-        const state = getState();
-        state.rewards.push({ id: `r_${Date.now()}`, emoji, title, desc, cost });
         localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-        renderDashboard();
+        alert('Ficha roja registrada correctamente con su respectivo motivo.');
         e.target.reset();
+        renderMainDashboard();
       });
     });
-
-    // Funciones globales de administración de fichas y datos
-    window.adjustTokens = function(type, amount) {
-      const state = getState();
-      if (!state.childProfile) state.childProfile = { blueTokens: 0, redTokens: 0 };
-
-      if (type === 'blue') {
-        const current = state.childProfile.blueTokens ?? 0;
-        state.childProfile.blueTokens = Math.max(0, current + amount);
-      } else if (type === 'red') {
-        const current = state.childProfile.redTokens ?? 0;
-        state.childProfile.redTokens = Math.max(0, current + amount);
-      }
-
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-      renderDashboard();
-    };
-
-    window.resetRedTokens = function() {
-      if (!confirm('¿Deseas reiniciar las fichas rojas de Ángel a 0?')) return;
-      
-      const state = getState();
-      if (!state.childProfile) state.childProfile = { blueTokens: 0, redTokens: 0 };
-      state.childProfile.redTokens = 0;
-
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-      renderDashboard();
-    };
-
-    window.deleteMission = function(id) {
-      const state = getState();
-      state.missions = state.missions.filter(m => m.id !== id);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-      renderDashboard();
-    };
-
-    window.deleteReward = function(id) {
-      const state = getState();
-      state.rewards = state.rewards.filter(r => r.id !== id);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-      renderDashboard();
-    };
 
     window.approveRequest = function(id, approved) {
       const state = getState();
       const req = (state.pendingApprovals || []).find(r => r.id === id);
 
       if (req && approved) {
-        if (!state.childProfile) state.childProfile = { name: 'Ángel', avatar: '👦', blueTokens: 0, redTokens: 0 };
         if (req.type === 'MISSION') {
           state.childProfile.blueTokens = (state.childProfile.blueTokens || 0) + req.tokens;
         }
       } else if (req && !approved && req.type === 'REWARD') {
-        if (!state.childProfile) state.childProfile = { name: 'Ángel', avatar: '👦', blueTokens: 0, redTokens: 0 };
         state.childProfile.blueTokens = (state.childProfile.blueTokens || 0) + req.tokens;
       }
 
       state.pendingApprovals = (state.pendingApprovals || []).filter(r => r.id !== id);
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-      renderDashboard();
-    };
-
-    // Copiar código familiar
-    window.copyFamilyCode = function() {
-      const codeInput = document.getElementById('family-code-input');
-      navigator.clipboard.writeText(codeInput.value);
-      alert('¡Código de familia copiado al portapapeles!');
-    };
-
-    // Vincular mediante código familiar básico
-    window.linkFamilyDevice = function() {
-      const input = document.getElementById('join-code-input');
-      const code = input.value.trim();
-
-      if (!code) {
-        alert('Por favor escribe un código de familia válido.');
-        return;
-      }
-
-      const state = getState();
-      state.familyCode = code;
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-
-      alert(`¡Dispositivo vinculado correctamente con el código ${code}! 🎉`);
-      location.reload();
-    };
-
-    // Exportar los datos actuales en texto para pasarlos por WhatsApp
-    window.exportFamilyData = function() {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (!saved) {
-        alert('No hay datos guardados aún.');
-        return;
-      }
-      navigator.clipboard.writeText(saved);
-      alert('¡Datos de la familia copiados al portapapeles! Pégaselos en un mensaje de WhatsApp al otro dispositivo para sincronizar.');
-    };
-
-    // Importar los datos desde otro dispositivo
-    window.importFamilyData = function() {
-      const jsonString = prompt('Pega aquí el código de datos que te compartieron:');
-      if (!jsonString) return;
-
-      try {
-        JSON.parse(jsonString);
-        localStorage.setItem(STORAGE_KEY, jsonString);
-        alert('¡Datos sincronizados con éxito! La app se actualizará.');
-        location.reload();
-      } catch (e) {
-        alert('El código de datos no es válido. Asegúrate de copiarlo completo.');
-      }
-    };
-
-    // Guardar fondo personalizado
-    window.saveCustomBg = function() {
-      const fileInput = document.getElementById('custom-bg-input');
-      if (!fileInput.files || fileInput.files.length === 0) {
-        alert('Por favor selecciona una imagen para el fondo.');
-        return;
-      }
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const state = getState();
-        if (!state.childProfile) state.childProfile = { blueTokens: 0, redTokens: 0 };
-        state.childProfile.customBgImage = e.target.result;
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-        alert('¡Fondo de pantalla guardado con éxito!');
-      };
-      reader.readAsDataURL(fileInput.files[0]);
-    };
-
-    // Guardar avatar personalizado
-    window.saveCustomAvatar = function() {
-      const fileInput = document.getElementById('custom-avatar-input');
-      if (!fileInput.files || fileInput.files.length === 0) {
-        alert('Por favor selecciona una imagen para el avatar.');
-        return;
-      }
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const state = getState();
-        if (!state.childProfile) state.childProfile = { blueTokens: 0, redTokens: 0 };
-        state.childProfile.customAvatarImage = e.target.result;
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-        alert('¡Avatar de héroe guardado con éxito!');
-      };
-      reader.readAsDataURL(fileInput.files[0]);
+      renderMainDashboard();
     };
   </script>
 </body>

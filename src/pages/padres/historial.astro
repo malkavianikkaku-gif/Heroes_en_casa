@@ -1,0 +1,93 @@
+---
+// src/pages/padres/historial.astro
+import '../../styles/global.css';
+---
+
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bitácora de Conducta - Centro de Padres</title>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen pb-24 font-sans">
+
+  <!-- Header -->
+  <header class="bg-slate-800 border-b border-slate-700 p-4 sticky top-0 z-30">
+    <div class="max-w-md mx-auto flex justify-between items-center">
+      <a href="/padres/dashboard" class="text-slate-400 hover:text-white transition font-bold text-sm flex items-center gap-1">
+        ← Volver
+      </a>
+      <h1 class="font-black text-white text-base">📜 Bitácora de Conducta</h1>
+    </div>
+  </header>
+
+  <main class="max-w-md mx-auto p-4 space-y-5">
+
+    <!-- Tarjeta de Control Rápido de Fichas Rojas -->
+    <section class="bg-slate-800 p-4 rounded-3xl border border-slate-700 flex items-center justify-between">
+      <div>
+        <span class="text-xs font-bold text-slate-400 uppercase">Fichas Rojas Actuales</span>
+        <div id="red-count-display" class="text-2xl font-black text-red-400">0 🔴</div>
+      </div>
+      <button onclick="resetRedTokens()" class="bg-red-600/20 hover:bg-red-600/30 text-red-300 font-bold px-3 py-2 rounded-xl text-xs border border-red-500/30 transition cursor-pointer">
+        🧹 Limpiar Contador
+      </button>
+    </section>
+
+    <!-- Lista de Historial con Motivo -->
+    <section class="space-y-3">
+      <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider">🔴 Registro de Motivos (Ajustes)</h2>
+      <div id="history-container" class="space-y-2"></div>
+    </section>
+
+  </main>
+
+  <script>
+    // @ts-nocheck
+    const STORAGE_KEY = 'family_app_state_v1';
+
+    function getState() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      return saved ? JSON.parse(saved) : { childProfile: {}, redTokenHistory: [] };
+    }
+
+    function renderHistory() {
+      const state = getState();
+      const countEl = document.getElementById('red-count-display');
+      if (countEl) countEl.innerText = `${state.childProfile?.redTokens ?? 0} 🔴`;
+
+      const container = document.getElementById('history-container');
+      if (!container) return;
+
+      const history = state.redTokenHistory || [];
+      if (history.length === 0) {
+        container.innerHTML = `<p class="text-xs text-slate-500 text-center py-6 bg-slate-800/40 rounded-2xl border border-slate-800">No hay registros de fichas rojas aún. ¡Excelente trabajo!</p>`;
+        return;
+      }
+
+      container.innerHTML = history.slice().reverse().map(item => `
+        <div class="bg-slate-800 p-3.5 rounded-2xl border border-slate-700 space-y-1">
+          <div class="flex justify-between items-center">
+            <span class="text-[10px] font-bold text-red-400 uppercase">🔴 Ajuste de Conducta</span>
+            <span class="text-[9px] font-mono text-slate-400">${item.date}</span>
+          </div>
+          <p class="text-xs font-bold text-white">${item.reason}</p>
+        </div>
+      `).join('');
+    }
+
+    window.resetRedTokens = function() {
+      if (!confirm('¿Deseas reiniciar las fichas rojas del héroe a 0?')) return;
+      const state = getState();
+      if (!state.childProfile) state.childProfile = {};
+      state.childProfile.redTokens = 0;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      renderHistory();
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderHistory();
+    });
+  </script>
+</body>
+</html>

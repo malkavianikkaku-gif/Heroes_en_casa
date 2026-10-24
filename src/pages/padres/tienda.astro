@@ -1,0 +1,132 @@
+---
+// src/pages/padres/tienda.astro
+import '../../styles/global.css';
+---
+
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Premios - Centro de Padres</title>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen pb-24 font-sans">
+
+  <!-- Header -->
+  <header class="bg-slate-800 border-b border-slate-700 p-4 sticky top-0 z-30">
+    <div class="max-w-md mx-auto flex justify-between items-center">
+      <a href="/padres/dashboard" class="text-slate-400 hover:text-white transition font-bold text-sm flex items-center gap-1">
+        ← Volver
+      </a>
+      <h1 class="font-black text-white text-base">🎁 Administrar Premios</h1>
+    </div>
+  </header>
+
+  <main class="max-w-md mx-auto p-4 space-y-5">
+
+    <!-- Formulario para Agregar Nuevo Premio -->
+    <section class="bg-slate-800/90 p-4 rounded-3xl border border-slate-700 space-y-3">
+      <h2 class="text-xs font-bold text-amber-400 uppercase tracking-wider">➕ Agregar Nuevo Premio</h2>
+      
+      <form id="add-reward-form" class="space-y-3">
+        <div class="grid grid-cols-4 gap-2">
+          <div class="col-span-1">
+            <label class="block text-[10px] font-bold text-slate-400 mb-1">Emoji</label>
+            <input type="text" id="reward-emoji" placeholder="🎨" maxlength="2" required class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-2 text-center text-base text-white outline-none focus:ring-2 focus:ring-amber-500" />
+          </div>
+          <div class="col-span-3">
+            <label class="block text-[10px] font-bold text-slate-400 mb-1">Nombre del Premio</label>
+            <input type="text" id="reward-title" placeholder="Ej. 30 min de Plastilina / Helado" required class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-xs text-white outline-none focus:ring-2 focus:ring-amber-500" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-[10px] font-bold text-slate-400 mb-1">Descripción Corta</label>
+            <input type="text" id="reward-desc" placeholder="Ej. Tiempo de juego sensorial" class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-xs text-white outline-none focus:ring-2 focus:ring-amber-500" />
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold text-slate-400 mb-1">Costo (🔵)</label>
+            <input type="number" id="reward-cost" min="1" max="500" value="30" required class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-xs text-white outline-none focus:ring-2 focus:ring-amber-500" />
+          </div>
+        </div>
+
+        <button type="submit" class="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-2.5 rounded-xl text-xs shadow transition cursor-pointer">
+          Guardar Premio
+        </button>
+      </form>
+    </section>
+
+    <!-- Catálogo Activo -->
+    <section class="space-y-2">
+      <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider">🛍️ Catálogo de Premios</h2>
+      <div id="rewards-list" class="space-y-2"></div>
+    </section>
+
+  </main>
+
+  <script>
+    // @ts-nocheck
+    const STORAGE_KEY = 'family_app_state_v1';
+
+    function getState() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      return saved ? JSON.parse(saved) : { rewards: [] };
+    }
+
+    function renderRewards() {
+      const state = getState();
+      const container = document.getElementById('rewards-list');
+      if (!container) return;
+
+      const rewards = state.rewards || [];
+      if (rewards.length === 0) {
+        container.innerHTML = `<p class="text-xs text-slate-500 text-center py-4 bg-slate-800/40 rounded-2xl border border-slate-800">No hay premios registrados aún.</p>`;
+        return;
+      }
+
+      container.innerHTML = rewards.map(r => `
+        <div class="bg-slate-800 p-3.5 rounded-2xl border border-slate-700 flex items-center justify-between gap-2">
+          <div class="flex items-center gap-3">
+            <span class="text-2xl">${r.emoji || '🎁'}</span>
+            <div>
+              <h4 class="font-bold text-xs text-white">${r.title}</h4>
+              <span class="text-[10px] text-amber-400 font-semibold">${r.cost} 🔵 ${r.desc ? '• ' + r.desc : ''}</span>
+            </div>
+          </div>
+          <button type="button" onclick="deleteReward('${r.id}')" class="text-slate-500 hover:text-red-400 p-1.5 text-xs font-bold transition cursor-pointer">
+            🗑️
+          </button>
+        </div>
+      `).join('');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderRewards();
+
+      document.getElementById('add-reward-form')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const emoji = document.getElementById('reward-emoji')?.value || '🎁';
+        const title = document.getElementById('reward-title')?.value;
+        const desc = document.getElementById('reward-desc')?.value || '';
+        const cost = parseInt(document.getElementById('reward-cost')?.value || '30', 10);
+
+        if (!title) return;
+        const state = getState();
+        if (!state.rewards) state.rewards = [];
+        state.rewards.push({ id: `r_${Date.now()}`, emoji, title, desc, cost });
+
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        renderRewards();
+        e.target.reset();
+      });
+    });
+
+    window.deleteReward = function(id) {
+      const state = getState();
+      state.rewards = (state.rewards || []).filter(r => r.id !== id);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      renderRewards();
+    };
+  </script>
+</body>
+</html>
